@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warzone Updates</title>
+  <meta name="description" content="Live Warzone updates from official and community sources." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<nav>
+  <div class="nav-logo">Warzone Guide</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="updates.html">Updates</a></li>
+  </ul>
+</nav>
+
+<div class="section">
+  <p class="section-title">Warzone Updates</p>
+  <p class="section-sub">Live feed powered by <code>warzone-data</code>. No daily Netlify deploy needed.</p>
+  <div id="meta" class="muted">Loading updates…</div>
+  <div id="highlights"></div>
+  <h3>Latest Items</h3>
+  <div id="items"></div>
+</div>
+
+<footer>Fan project. Not affiliated with Activision.</footer>
+
+<script>
+const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json';
+const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const card = ({title,body,url,meta}) => `<article class="update"><h4>${esc(title||'Untitled')}</h4>${body?`<p>${esc(body)}</p>`:''}${url?`<p><a target="_blank" rel="noopener" href="${esc(url)}">Source →</a></p>`:''}${meta?`<p class="muted">${esc(meta)}</p>`:''}</article>`;
+(async () => {
+  const metaEl = document.getElementById('meta');
+  const hEl = document.getElementById('highlights');
+  const iEl = document.getElementById('items');
+  try {
+    const res = await fetch(DATA_URL, {cache:'no-store'});
+    const data = await res.json();
+    metaEl.textContent = `Last updated: ${new Date(data.generatedAt || Date.now()).toLocaleString()}`;
+    const highs = Array.isArray(data.highlights) ? data.highlights : [];
+    hEl.innerHTML = highs.length ? highs.map(h => card({title:(h.item||{}).title || h.kind, body:(h.item||{}).summary, url:(h.item||{}).url, meta:h.kind})).join('') : card({title:'No major highlights yet'});
+    const items = Array.isArray(data.items) ? data.items : [];
+    iEl.innerHTML = items.length ? items.slice(0,20).map(it => card({title:it.title, body:it.summary, url:it.url, meta:[it.source, it.publishedAt].filter(Boolean).join(' · ')})).join('') : card({title:'No updates yet'});
+  } catch (e) {
+    metaEl.textContent = 'Feed unavailable right now.';
+    hEl.innerHTML = card({title:'Could not load updates'});
+  }
+})();
+</script>
+</body>
+</html>
