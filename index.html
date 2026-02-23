@@ -54,14 +54,16 @@ const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data
 const esc = (s='') => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = (d) => d ? new Date(d).toLocaleString() : 'Unknown';
 
-const fallbackTier = {updatedAt:null,tiers:{S:['Kilo 141','AMAX'],A:['MCW','HRM-9'],B:['Rival-9','Holger']}};
+const fallbackTier = {updatedAt:null,tiers:{S:['Kilo 141','AMAX'],A:['MCW','HRM-9'],B:['Rival-9','Holger'],C:['Striker 9','SVA 545'],D:['WSP-9','M16'],F:['Low pick-rate / off-meta builds']}};
 
 function renderTier(t){
   const tiers=(t&&t.tiers)||fallbackTier.tiers;
+  const order=['S','A','B','C','D','F'];
   document.getElementById('tier-last-updated').textContent=`Last checked: ${fmt((t&&t.updatedAt)||null)}`;
-  document.getElementById('tier-grid').innerHTML = Object.entries(tiers).map(([tier,items])=>`
-    <article class="tier-card tier-${tier.toLowerCase()}"><h3>${esc(tier)} Tier</h3><ul>${(items||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul></article>
-  `).join('');
+  document.getElementById('tier-grid').innerHTML = order.map((tier)=>{
+    const items=(tiers&&tiers[tier]&&tiers[tier].length)?tiers[tier]:['No items ranked in this tier yet'];
+    return `<article class="tier-card tier-${tier.toLowerCase()}"><h3>${esc(tier)} Tier</h3><ul>${items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></article>`;
+  }).join('');
 }
 
 function renderPatch(items){
