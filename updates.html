@@ -3,49 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Warzone Updates</title>
-  <meta name="description" content="Live Warzone updates from official and community sources." />
+  <title>Warzone News Feed — Meta Hub</title>
+  <meta name="description" content="Live Warzone news feed from official and community sources." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <nav>
-  <div class="nav-logo">Warzone Guide</div>
+  <div class="nav-logo">Warzone Meta Hub</div>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="updates.html">Updates</a></li>
+    <li><a href="index.html">Tier List</a></li>
+    <li><a href="patch-notes.html">Patch Notes</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="updates.html">News</a></li>
   </ul>
 </nav>
 
 <div class="section">
-  <p class="section-title">Warzone Updates</p>
-  <p class="section-sub">Live feed powered by <code>warzone-data</code>. No daily Netlify deploy needed.</p>
-  <div id="meta" class="muted">Loading updates…</div>
-  <div id="highlights"></div>
-  <h3>Latest Items</h3>
-  <div id="items"></div>
+  <div class="section-head">
+    <h1>Warzone News Feed</h1>
+    <p id="meta" class="muted">Loading updates…</p>
+  </div>
+  <h2>Highlights</h2>
+  <div id="highlights" class="update-list"></div>
+  <h2>Latest Items</h2>
+  <div id="items" class="update-list"></div>
 </div>
 
-<footer>Fan project. Not affiliated with Activision.</footer>
+<footer>
+  <p>Warzone Meta Hub — fan-run site, not affiliated with Activision.</p>
+  <p class="muted"><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate-disclosure.html">Affiliate Disclosure</a></p>
+</footer>
 
 <script>
-const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json';
-const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const card = ({title,body,url,meta}) => `<article class="update"><h4>${esc(title||'Untitled')}</h4>${body?`<p>${esc(body)}</p>`:''}${url?`<p><a target="_blank" rel="noopener" href="${esc(url)}">Source →</a></p>`:''}${meta?`<p class="muted">${esc(meta)}</p>`:''}</article>`;
-(async () => {
-  const metaEl = document.getElementById('meta');
-  const hEl = document.getElementById('highlights');
-  const iEl = document.getElementById('items');
-  try {
-    const res = await fetch(DATA_URL, {cache:'no-store'});
-    const data = await res.json();
-    metaEl.textContent = `Last updated: ${new Date(data.generatedAt || Date.now()).toLocaleString()}`;
-    const highs = Array.isArray(data.highlights) ? data.highlights : [];
-    hEl.innerHTML = highs.length ? highs.map(h => card({title:(h.item||{}).title || h.kind, body:(h.item||{}).summary, url:(h.item||{}).url, meta:h.kind})).join('') : card({title:'No major highlights yet'});
-    const items = Array.isArray(data.items) ? data.items : [];
-    iEl.innerHTML = items.length ? items.slice(0,20).map(it => card({title:it.title, body:it.summary, url:it.url, meta:[it.source, it.publishedAt].filter(Boolean).join(' · ')})).join('') : card({title:'No updates yet'});
-  } catch (e) {
-    metaEl.textContent = 'Feed unavailable right now.';
-    hEl.innerHTML = card({title:'Could not load updates'});
+const DATA_URL='https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json';
+const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>d?new Date(d).toLocaleString():'Unknown';
+const card=({title,body,url,meta})=>`<article class="update"><h3>${esc(title||'Untitled')}</h3>${body?`<p>${esc(body)}</p>`:''}${url?`<p><a target="_blank" rel="noopener" href="${esc(url)}">Source →</a></p>`:''}${meta?`<p class="muted">${esc(meta)}</p>`:''}</article>`;
+(async()=>{
+  const metaEl=document.getElementById('meta');
+  const hEl=document.getElementById('highlights');
+  const iEl=document.getElementById('items');
+  try{
+    const data=await (await fetch(DATA_URL,{cache:'no-store'})).json();
+    metaEl.textContent=`Last updated: ${fmt(data.generatedAt)}`;
+    const highs=Array.isArray(data.highlights)?data.highlights:[];
+    hEl.innerHTML=highs.length?highs.map(h=>card({title:(h.item||{}).title||h.kind,body:(h.item||{}).summary,url:(h.item||{}).url,meta:h.kind})).join(''):'<article class="update"><h3>No major highlights yet</h3></article>';
+    const items=Array.isArray(data.items)?data.items:[];
+    iEl.innerHTML=items.length?items.slice(0,30).map(it=>card({title:it.title,body:it.summary,url:it.url,meta:[it.source,fmt(it.publishedAt||it.observedAt)].join(' · ')})).join(''):'<article class="update"><h3>No updates yet</h3></article>';
+  }catch(e){
+    metaEl.textContent='Feed unavailable right now.';
+    hEl.innerHTML='<article class="update"><h3>Could not load updates</h3></article>';
   }
 })();
 </script>

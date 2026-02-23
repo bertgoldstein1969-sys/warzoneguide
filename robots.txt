@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://warzonemetahub.com/sitemap.xml
