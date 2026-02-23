@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warzone Patch Notes — Meta Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<nav>
+  <div class="nav-logo">Warzone Meta Hub</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Tier List</a></li>
+    <li><a href="patch-notes.html">Patch Notes</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="updates.html">News</a></li>
+  </ul>
+</nav>
+<div class="section">
+  <div class="section-head">
+    <h1>Patch Notes</h1>
+    <p id="updated" class="muted">Loading…</p>
+  </div>
+  <div id="notes" class="update-list"></div>
+</div>
+<footer><p>Warzone Meta Hub — fan-run site.</p></footer>
+<script>
+const DATA_URL='https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json';
+const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>d?new Date(d).toLocaleString():'Unknown';
+(async()=>{
+  const notesEl=document.getElementById('notes');
+  try{
+    const data=await (await fetch(DATA_URL,{cache:'no-store'})).json();
+    const items=(data.patchNotes&&data.patchNotes.items)||[];
+    document.getElementById('updated').textContent=`Last updated: ${fmt((data.patchNotes||{}).updatedAt||data.generatedAt)}`;
+    notesEl.innerHTML=items.length?items.map(it=>`<article class="update"><h3>${esc(it.title||'Update')}</h3><p>${esc(it.summary||'')}</p><p class="muted">${esc(it.source||'source')} · ${esc(fmt(it.publishedAt||it.observedAt))}</p><a href="${esc(it.url||'#')}" target="_blank" rel="noopener">Source →</a></article>`).join(''):'<article class="update"><h3>No patch notes yet</h3></article>';
+  }catch(e){notesEl.innerHTML='<article class="update"><h3>Feed unavailable</h3></article>';}
+})();
+</script>
+</body>
+</html>

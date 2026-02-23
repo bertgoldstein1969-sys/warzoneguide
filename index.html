@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Warzone Meta Hub — Tier List, Patch Notes, Best Loadouts</title>
-  <meta name="description" content="Warzone tier list, patch notes, and gear recommendations updated automatically." />
+  <title>Warzone Tier List — Meta Hub</title>
+  <meta name="description" content="Live Warzone tier list with auto-updated last-checked status." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,16 +12,16 @@
     <nav>
       <div class="nav-logo">Warzone Meta Hub</div>
       <ul class="nav-links">
-        <li><a href="#tier-list">Tier List</a></li>
-        <li><a href="#patch-notes">Patch Notes</a></li>
-        <li><a href="#shop">Shop</a></li>
+        <li><a href="index.html">Tier List</a></li>
+        <li><a href="patch-notes.html">Patch Notes</a></li>
+        <li><a href="shop.html">Shop</a></li>
         <li><a href="updates.html">News</a></li>
       </ul>
     </nav>
     <div class="hero-inner section">
-      <p class="kicker">AUTOMATED META TRACKER</p>
-      <h1>Warzone Tier List + Patch Intel That Updates Itself</h1>
-      <p class="section-sub">Built for quick decisions: what to run, what changed, and what to buy — without digging through ten tabs.</p>
+      <p class="kicker">WARZONE META TRACKER</p>
+      <h1>Current Weapon Tier List</h1>
+      <p class="section-sub">Built for quick loadout decisions. Updated from live sources with timestamped checks.</p>
       <div id="status-row" class="status-row">Loading latest check status…</div>
     </div>
   </header>
@@ -29,32 +29,23 @@
   <main class="section">
     <section id="tier-list">
       <div class="section-head">
-        <h2>Current Weapon Tier List</h2>
+        <h2>Tier List (Primary)</h2>
         <p id="tier-last-updated" class="muted">Last checked: loading…</p>
       </div>
       <div id="tier-grid" class="tier-grid"></div>
     </section>
 
-    <section id="patch-notes">
+    <section id="patch-preview">
       <div class="section-head">
-        <h2>Latest Patch Notes</h2>
-        <a href="updates.html" class="text-link">See all update coverage →</a>
+        <h2>Latest Patch Notes (Preview)</h2>
+        <a href="patch-notes.html" class="text-link">Open full patch notes page →</a>
       </div>
       <div id="patch-list" class="update-list"></div>
-    </section>
-
-    <section id="shop">
-      <div class="section-head">
-        <h2>Recommended Setup (Affiliate)</h2>
-        <p class="muted">Support the site by using these links. Prices can change.</p>
-      </div>
-      <div id="shop-grid" class="shop-grid"></div>
     </section>
   </main>
 
   <footer>
     <p>Warzone Meta Hub — fan-run site, not affiliated with Activision.</p>
-    <p class="muted">For advertisers: this site uses clear sections, editorial summaries, and regularly refreshed content.</p>
   </footer>
 
 <script>
@@ -62,75 +53,37 @@ const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data
 const esc = (s='') => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = (d) => d ? new Date(d).toLocaleString() : 'Unknown';
 
-const defaultTier = {
-  updatedAt: null,
-  tiers: {
-    S: ['Kilo 141 (placeholder)','AMAX (placeholder)'],
-    A: ['MCW (placeholder)','HRM-9 (placeholder)'],
-    B: ['Rival-9 (placeholder)','Holger (placeholder)']
-  }
-};
+const fallbackTier = {updatedAt:null,tiers:{S:['Kilo 141','AMAX'],A:['MCW','HRM-9'],B:['Rival-9','Holger']}};
 
-const defaultShop = [
-  {name:'Pro Controller', category:'Controller', note:'Low-latency competitive option', url:'https://www.amazon.com/?tag=REPLACE_WITH_TAG'},
-  {name:'Gaming Headset', category:'Audio', note:'Footstep clarity + directional audio', url:'https://www.amazon.com/?tag=REPLACE_WITH_TAG'},
-  {name:'XL Mousepad', category:'Setup', note:'Consistent tracking space', url:'https://www.amazon.com/?tag=REPLACE_WITH_TAG'}
-];
-
-function renderTier(tierData){
-  const container = document.getElementById('tier-grid');
-  const last = document.getElementById('tier-last-updated');
-  const tiers = (tierData && tierData.tiers) || defaultTier.tiers;
-  last.textContent = `Last checked: ${fmt((tierData && tierData.updatedAt) || null)}`;
-  container.innerHTML = Object.entries(tiers).map(([tier,items]) => `
-    <article class="tier-card tier-${tier.toLowerCase()}">
-      <h3>${esc(tier)} Tier</h3>
-      <ul>${(items||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>
-    </article>`).join('');
+function renderTier(t){
+  const tiers=(t&&t.tiers)||fallbackTier.tiers;
+  document.getElementById('tier-last-updated').textContent=`Last checked: ${fmt((t&&t.updatedAt)||null)}`;
+  document.getElementById('tier-grid').innerHTML = Object.entries(tiers).map(([tier,items])=>`
+    <article class="tier-card tier-${tier.toLowerCase()}"><h3>${esc(tier)} Tier</h3><ul>${(items||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul></article>
+  `).join('');
 }
 
 function renderPatch(items){
-  const el = document.getElementById('patch-list');
+  const el=document.getElementById('patch-list');
   if(!items.length){
-    el.innerHTML = `<article class="update"><h3>No fresh patch-note entries yet</h3><p class="muted">The scraper is running; this section auto-fills as new items arrive.</p></article>`;
+    el.innerHTML='<article class="update"><h3>No fresh patch-note entries yet</h3><p class="muted">Auto-fill active; check back shortly.</p></article>';
     return;
   }
-  el.innerHTML = items.slice(0,6).map(it=>`
-    <article class="update">
-      <h3>${esc(it.title || 'Update')}</h3>
-      <p>${esc(it.summary || '')}</p>
-      <p class="muted">${esc(it.source || 'source')} · ${esc(fmt(it.publishedAt || it.observedAt))}</p>
-      <a href="${esc(it.url||'#')}" target="_blank" rel="noopener">Source →</a>
-    </article>`).join('');
-}
-
-function renderShop(products){
-  const el = document.getElementById('shop-grid');
-  const list = (products && products.length) ? products : defaultShop;
-  el.innerHTML = list.map(p=>`
-    <article class="shop-card">
-      <p class="badge">${esc(p.category || 'Gear')}</p>
-      <h3>${esc(p.name || 'Recommended Item')}</h3>
-      <p>${esc(p.note || '')}</p>
-      <a class="btn" href="${esc(p.url || '#')}" target="_blank" rel="sponsored noopener">Check on Amazon</a>
-    </article>`).join('');
+  el.innerHTML=items.slice(0,3).map(it=>`<article class="update"><h3>${esc(it.title||'Update')}</h3><p>${esc(it.summary||'')}</p><p class="muted">${esc(it.source||'source')} · ${esc(fmt(it.publishedAt||it.observedAt))}</p></article>`).join('');
 }
 
 (async()=>{
   const status = document.getElementById('status-row');
   try{
-    const res = await fetch(DATA_URL,{cache:'no-store'});
-    const data = await res.json();
+    const data = await (await fetch(DATA_URL,{cache:'no-store'})).json();
     status.textContent = `Data feed updated: ${fmt(data.generatedAt)} • Auto-scrape active`;
-    renderTier(data.tierList || defaultTier);
-    const patchLike = (data.patchNotes && data.patchNotes.items) || (data.items||[]).filter(i => /patch|notes|playlist|update|hotfix/i.test((i.title||'') + ' ' + (i.summary||'')));
+    renderTier(data.tierList || fallbackTier);
+    const patchLike = (data.patchNotes && data.patchNotes.items) || (data.items||[]).filter(i => /patch|notes|playlist|update|hotfix|season/i.test((i.title||'')+' '+(i.summary||'')));
     renderPatch(patchLike);
-    renderShop(data.shopProducts || []);
   }catch(e){
-    status.textContent = 'Feed unavailable right now. Showing fallback content.';
-    renderTier(defaultTier);
+    status.textContent='Feed unavailable; using fallback.';
+    renderTier(fallbackTier);
     renderPatch([]);
-    renderShop([]);
   }
 })();
 </script>
