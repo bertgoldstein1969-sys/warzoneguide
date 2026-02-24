@@ -85,6 +85,27 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .page-hero-img{width:100%;max-height:320px;object-fit:cover;border:1px solid #2a313b;border-radius:12px;margin:.25rem 0 1rem;display:block}
 .brand-mark{width:120px;height:120px;object-fit:contain;display:block;margin:.3rem 0 1rem;filter:drop-shadow(0 0 18px rgba(143,255,95,.22))}
 
+#tier-list{
+  position:relative;
+  border:1px solid #253142;
+  border-radius:14px;
+  padding:1rem;
+  overflow:hidden;
+  background:#121923;
+}
+#tier-list::before{
+  content:'';
+  position:absolute;inset:0;
+  background:url('assets/tier-bg-map.png') center/cover no-repeat;
+  opacity:.35;
+}
+#tier-list::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(10,15,22,.82), rgba(10,15,22,.9));
+}
+#tier-list > *{position:relative;z-index:1}
+
 .tier-table{display:flex;flex-direction:column;gap:.7rem;margin-top:1rem}
 .tier-row{display:grid;grid-template-columns:66px 1fr;gap:.75rem;align-items:stretch;background:#161b24;border:1px solid #252e3d;border-radius:10px;padding:.55rem}
 .tier-badge{display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.35rem;border-radius:8px;color:#08120b;min-height:74px}
