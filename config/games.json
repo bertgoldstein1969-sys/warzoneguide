@@ -1,0 +1,34 @@
+{
+  "warzone": {
+    "name": "Warzone",
+    "slug": "warzone",
+    "dataSource": "https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/weapon-trends.json",
+    "newsSource": "https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json",
+    "themeColor": "#00ff99",
+    "brandLabel": "Meta Hub"
+  },
+  "bo7": {
+    "name": "Black Ops 7",
+    "slug": "bo7",
+    "dataSource": "./assets/weapons.json",
+    "newsSource": "./assets/weapons.json",
+    "themeColor": "#ff3b3b",
+    "brandLabel": "Meta Hub"
+  },
+  "battlefield": {
+    "name": "Battlefield",
+    "slug": "battlefield",
+    "dataSource": "./assets/weapons.json",
+    "newsSource": "./assets/weapons.json",
+    "themeColor": "#53b7ff",
+    "brandLabel": "Meta Hub"
+  },
+  "fortnite": {
+    "name": "Fortnite",
+    "slug": "fortnite",
+    "dataSource": "./assets/weapons.json",
+    "newsSource": "./assets/weapons.json",
+    "themeColor": "#bb8cff",
+    "brandLabel": "Meta Hub"
+  }
+}

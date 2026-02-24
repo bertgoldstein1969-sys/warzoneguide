@@ -10,7 +10,7 @@
 </head>
 <body>
 <nav>
-  <div class="nav-logo"><img src="assets/logo-shield.png" alt="Warzone Meta Hub logo" class="nav-logo-img"/><span>Warzone Meta Hub</span></div>
+  <div class="nav-logo"><img src="assets/logo-shield.png" alt="Warzone Meta Hub logo" class="nav-logo-img"/><span data-brand>Warzone Meta Hub</span></div>
   <ul class="nav-links">
     <li><a href="index.html">Tier List</a></li>
     <li><a href="patch-notes.html">Patch Notes</a></li>
@@ -58,5 +58,6 @@ const card=({title,body,url,meta})=>`<article class="update"><h3>${esc(title||'U
   }
 })();
 </script>
+<script src="assets/app-config.js"></script>
 </body>
 </html>

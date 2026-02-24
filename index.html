@@ -11,7 +11,7 @@
 <body>
   <header class="hero">
     <nav>
-      <div class="nav-logo"><img src="assets/logo-shield.png" alt="Warzone Meta Hub logo" class="nav-logo-img"/><span>Warzone Meta Hub</span></div>
+      <div class="nav-logo"><img src="assets/logo-shield.png" alt="Warzone Meta Hub logo" class="nav-logo-img"/><span data-brand>Warzone Meta Hub</span></div>
       <ul class="nav-links">
         <li><a href="index.html">Tier List</a></li>
         <li><a href="patch-notes.html">Patch Notes</a></li>
@@ -110,6 +110,8 @@
     <p class="muted"><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate-disclosure.html">Affiliate Disclosure</a></p>
   </footer>
 
+  <div id="scroll-cta" class="scroll-cta"><button id="scroll-copy" class="copy-btn">Copy Best Loadout Now</button></div>
+
 <div id="weapon-modal" class="wm-modal" aria-hidden="true">
   <div class="wm-panel">
     <button id="wm-close" class="wm-close">✕</button>
@@ -120,6 +122,7 @@
       <div><h4>Recommended Attachments</h4><ul id="wm-attachments"></ul></div>
       <div><h4>Strengths</h4><ul id="wm-strengths"></ul></div>
       <div><h4>Weaknesses</h4><ul id="wm-weaknesses"></ul></div>
+      <div><h4>Related Weapons</h4><ul id="wm-related"></ul></div>
     </div>
   </div>
 </div>
@@ -223,6 +226,7 @@ function weaponCard(w){
     <div class="weapon-stats"><span>TTK: ${ttk}ms</span><span>Recoil: ${Math.max(1,100-w.control)}%</span><span>Pop: ${pop}%</span></div>
     <div class="impact-row"><span>Patch Impact</span><span class="impact-score ${impact>=75?'impact-high':impact>=55?'impact-mid':'impact-low'}">${impact}</span></div>
     <div class="impact-bar"><i style="width:${impact}%"></i></div>
+    <a class="weapon-link" href="weapons/${encodeURIComponent(w.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))}-meta-build.html">Open Build Page →</a>
   </article>`;
 }
 
@@ -259,6 +263,8 @@ function openWeaponModal(id){
   document.getElementById('wm-attachments').innerHTML=(w.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>No recommended attachments listed</li>';
   document.getElementById('wm-strengths').innerHTML=(w.strengths||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
   document.getElementById('wm-weaknesses').innerHTML=(w.weaknesses||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
+  const rel = weapons.filter(x=>x.class===w.class && x.name!==w.name).slice(0,4);
+  document.getElementById('wm-related').innerHTML = rel.map(x=>`<li><a href="weapons/${encodeURIComponent(x.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))}-meta-build.html">${esc(x.name)}</a></li>`).join('') || '<li>No related weapons</li>';
   modal.classList.add('open');
 }
 
@@ -317,7 +323,13 @@ function wireControls(lastUpdated){
   document.getElementById('wm-close').addEventListener('click',()=>document.getElementById('weapon-modal').classList.remove('open'));
   document.getElementById('weapon-modal').addEventListener('click',(e)=>{if(e.target.id==='weapon-modal') e.currentTarget.classList.remove('open');});
   const sticky=document.getElementById('sticky-meta');
-  window.addEventListener('scroll',()=>{ if(window.scrollY>220) sticky.classList.add('show'); else sticky.classList.remove('show'); });
+  const scta=document.getElementById('scroll-cta');
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>220) sticky.classList.add('show'); else sticky.classList.remove('show');
+    const ratio = (window.scrollY + window.innerHeight) / (document.documentElement.scrollHeight || 1);
+    if(ratio>0.5) scta.classList.add('show'); else scta.classList.remove('show');
+  });
+  document.getElementById('scroll-copy')?.addEventListener('click', ()=> document.getElementById('copy-loadout')?.click());
 }
 
 (async()=>{
@@ -344,5 +356,6 @@ function wireControls(lastUpdated){
   wireControls(lastUpdated);
 })();
 </script>
+<script src="assets/app-config.js"></script>
 </body>
 </html>

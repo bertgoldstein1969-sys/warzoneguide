@@ -116,6 +116,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .weapon-mini h4{margin:0 0 .2rem;font-size:1.02rem;font-weight:800;line-height:1.2;color:#f3f6ff}
 .weapon-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.2rem;font-size:.72rem;color:#afbacf}
 .tier-s .tier-badge{background:#00ff41}
+.tier-s .weapon-mini{transform:scale(1.015);border-color:#7eff8f;box-shadow:0 0 16px rgba(126,255,143,.18)}
 .tier-a .tier-badge{background:#61f500}
 .tier-b .tier-badge{background:#d9dc1b}
 .tier-c .tier-badge{background:#ffd11a}
@@ -200,7 +201,14 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .impact-high{color:#7eff8f}.impact-mid{color:#ffd86a}.impact-low{color:#ff8f8f}
 .impact-bar{height:6px;background:#172131;border:1px solid #2b3b56;border-radius:999px;overflow:hidden}
 .impact-bar i{display:block;height:100%;background:linear-gradient(90deg,#ff5555,#ffd65a,#78ff88)}
+.weapon-link{display:inline-block;margin-top:.35rem;font-size:.75rem;color:#9dd4ff;text-decoration:none}
+.weapon-link:hover{color:#c4e8ff}
+.scroll-cta{position:fixed;right:16px;bottom:18px;z-index:40;display:none}
+.scroll-cta.show{display:block}
+.scroll-cta .copy-btn{box-shadow:0 8px 24px rgba(0,0,0,.35)}
 @media (max-width: 900px){
   .change-grid{grid-template-columns:1fr}
   .sticky-meta{top:50px}
+  .scroll-cta{left:12px;right:12px;bottom:14px}
+  .scroll-cta .copy-btn{width:100%}
 }
