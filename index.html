@@ -83,6 +83,7 @@
           <span class="muted">Updated from current top S-tier pick</span>
         </div>
         <div id="loadout-card"></div>
+        <div id="share-loadout" class="share-loadout"></div>
         <div id="affiliate-gear" class="affiliate-gear"></div>
       </section>
 
@@ -254,7 +255,7 @@ function openWeaponModal(id){
   const modal=document.getElementById('weapon-modal');
   document.getElementById('wm-title').textContent=w.name;
   document.getElementById('wm-meta').textContent=`${w.class} • Tier ${w.tier} • Mode: ${w.mode}`;
-  document.getElementById('wm-stats').innerHTML=`<li>Damage: ${w.damage}</li><li>Range: ${w.range}</li><li>Mobility: ${w.mobility}</li><li>Control: ${w.control}</li><li>Estimated TTK: ${ttkFor(w)}ms</li><li>Popularity: ${popularityFor(w.name)}%</li><li>Patch Impact Score: ${patchImpactFor(w)}/100</li>`;
+  document.getElementById('wm-stats').innerHTML=`<li>Damage: ${w.damage}</li><li>Range: ${w.range}</li><li>Mobility: ${w.mobility}</li><li>Control: ${w.control}</li><li>Estimated TTK: ${ttkFor(w)}ms</li><li>Popularity: ${popularityFor(w.name)}%</li><li>Patch Impact Score: ${patchImpactFor(w)}/100</li><li>Momentum Score: ${w.momentumScore??0}</li><li>Time in Tier: ${w.timeInTier??0} day(s)</li><li>Heat: ${w.heatLevel||'stable'}</li>`;
   document.getElementById('wm-attachments').innerHTML=(w.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>No recommended attachments listed</li>';
   document.getElementById('wm-strengths').innerHTML=(w.strengths||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
   document.getElementById('wm-weaknesses').innerHTML=(w.weaknesses||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
@@ -265,10 +266,27 @@ function renderLoadout(lastUpdated){
   const best=weapons.find(w=>w.tier==='S') || weapons[0];
   if(!best) return;
   document.getElementById('loadout-card').innerHTML=`<div class="loadout-card"><h3>${esc(best.name)}</h3><p class="muted">🔥 Updated ${hoursAgo(lastUpdated)} — dominating right now</p><p class="muted">${esc(best.strengths?.[0]||'Best all-around pick right now')}</p><ul>${(best.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')}</ul><div class="loadout-cta"><button class="copy-btn" id="copy-loadout">Copy Loadout</button><a class="copy-btn secondary" href="shop.html">Build This Setup</a></div><p class="affiliate-slot">Recommended Gear for this setup:</p></div>`;
-  document.getElementById('affiliate-gear').innerHTML=`<div class='gear-grid'><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Low-Latency Controller</strong><span>Best for close-range movement fights</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Directional Audio Headset</strong><span>Hear pushes earlier in final circles</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Precision Thumbsticks</strong><span>Helps long-range recoil control</span></a></div>`;
+  const shareUrl = `${location.origin}${location.pathname}?weapon=${encodeURIComponent(best.name)}&tier=${encodeURIComponent(best.tier)}`;
+  document.getElementById('share-loadout').innerHTML = `<div class="content-card"><h3>Share Loadout</h3><p class="muted">Optimized for Reddit, TikTok captions, and Discord posts.</p><div class="loadout-cta"><button class="copy-btn" id="copy-link">Copy Link</button><button class="copy-btn secondary" id="download-card">Download Image</button></div></div>`;
+  document.getElementById('affiliate-gear').innerHTML=`<div class='gear-grid'><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Best Controller for Warzone</strong><span>Improves close-range strafe tracking and movement consistency</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Best Headset for Footsteps</strong><span>Clear directional audio for faster reaction in final circles</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Best Monitor for Competitive Play</strong><span>Higher refresh + lower latency for cleaner gunfights</span></a></div>`;
   document.getElementById('copy-loadout').addEventListener('click',async()=>{
     const txt=`${best.name}\n${(best.attachments||[]).join('\n')}`;
     try{ await navigator.clipboard.writeText(txt); document.getElementById('copy-loadout').textContent='Copied'; }catch{}
+  });
+  document.getElementById('copy-link').addEventListener('click', async()=>{
+    try{ await navigator.clipboard.writeText(shareUrl); document.getElementById('copy-link').textContent='Copied Link'; }catch{}
+  });
+  document.getElementById('download-card').addEventListener('click', ()=>{
+    const c=document.createElement('canvas'); c.width=1200; c.height=630;
+    const x=c.getContext('2d');
+    x.fillStyle='#0f1520'; x.fillRect(0,0,c.width,c.height);
+    x.fillStyle='#9dff5b'; x.font='700 34px Arial'; x.fillText('WARZONE META LOADOUT', 50, 80);
+    x.fillStyle='#fff'; x.font='700 58px Arial'; x.fillText(best.name, 50, 170);
+    x.fillStyle='#cde0ff'; x.font='28px Arial'; x.fillText(`Tier ${best.tier} • ${best.mode}`, 50, 220);
+    x.fillStyle='#d8e6ff'; x.font='24px Arial';
+    (best.attachments||[]).slice(0,5).forEach((a,i)=>x.fillText(`• ${a}`, 50, 290 + i*44));
+    x.fillStyle='#95f7ba'; x.font='22px Arial'; x.fillText('warzonemetahub.com', 50, 590);
+    const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download=`${best.name.replace(/\s+/g,'-').toLowerCase()}-loadout.png`; a.click();
   });
 }
 
