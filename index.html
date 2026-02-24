@@ -134,7 +134,8 @@ function renderTier(t){
         <div class="tier-weapons">
           ${finalItems.map(name=>{
             const s=pseudoStats(name);
-            return `<article class="weapon-mini" data-class="${s.cls}"><h4>${esc(name)} <span class="wclass">${s.cls.toUpperCase()}</span></h4><div class="weapon-stats"><span>DMG: ${s.dmg}</span><span>RNG: ${s.rng}</span><span>CTL: ${s.ctl}</span></div></article>`;
+            const thumb=`assets/gun-${s.cls}.svg`;
+            return `<article class="weapon-mini" data-class="${s.cls}"><img class="weapon-thumb" src="${thumb}" alt="${s.cls.toUpperCase()} weapon" loading="lazy"/><h4>${esc(name)} <span class="wclass">${s.cls.toUpperCase()}</span></h4><div class="weapon-stats"><span>DMG: ${s.dmg}</span><span>RNG: ${s.rng}</span><span>CTL: ${s.ctl}</span></div></article>`;
           }).join('')}
         </div>
       </div>
