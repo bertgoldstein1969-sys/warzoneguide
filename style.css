@@ -83,6 +83,7 @@ h3{font-size:1.25rem;margin:.4rem 0 .6rem;font-weight:800}
 .text-link{font-weight:600}
 footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:#98a0ac}
 .page-hero-img{width:100%;max-height:320px;object-fit:cover;border:1px solid #2a313b;border-radius:12px;margin:.25rem 0 1rem;display:block}
+.brand-mark{width:120px;height:120px;object-fit:contain;display:block;margin:.3rem 0 1rem;filter:drop-shadow(0 0 18px rgba(143,255,95,.22))}
 
 .tier-table{display:flex;flex-direction:column;gap:.7rem;margin-top:1rem}
 .tier-row{display:grid;grid-template-columns:66px 1fr;gap:.75rem;align-items:stretch;background:#161b24;border:1px solid #252e3d;border-radius:10px;padding:.55rem}
