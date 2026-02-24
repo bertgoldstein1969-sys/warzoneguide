@@ -162,6 +162,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .wm-grid ul{margin:0;padding-left:1rem;color:#cfe0ff}
 @media (max-width: 860px){.wm-grid{grid-template-columns:1fr}}
 
+.meta-alert{margin:.45rem 0 .25rem;padding:.5rem .7rem;border:1px solid #4f6d2a;background:linear-gradient(90deg,#203116,#17221a);border-radius:9px;color:#baf68d;font-weight:700}
 .top-meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.5rem;margin-top:.7rem}
 .top-meta-card{background:linear-gradient(180deg,#172233,#121a27);border:1px solid #2a3850;border-radius:10px;padding:.55rem .65rem}
 .top-meta-card h4{margin:.1rem 0 .25rem;font-size:1rem}
@@ -172,13 +173,21 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .content-card{background:#121923;border:1px solid #253142;border-radius:14px;padding:1rem;margin-top:1rem}
 .loadout-card{background:#182232;border:1px solid #2f3f58;border-radius:12px;padding:.8rem}
 .loadout-card ul{margin:.45rem 0 .6rem;padding-left:1rem}
-.copy-btn{background:#84ff2a;border:1px solid #9dff5b;color:#0e1510;border-radius:8px;padding:.4rem .65rem;font-weight:800;cursor:pointer}
+.loadout-cta{display:flex;gap:.45rem;flex-wrap:wrap}
+.copy-btn{background:#84ff2a;border:1px solid #9dff5b;color:#0e1510;border-radius:8px;padding:.4rem .65rem;font-weight:800;cursor:pointer;text-decoration:none}
+.copy-btn.secondary{background:#1f2c41;color:#dbe9ff;border-color:#39506f}
 .affiliate-slot{margin-top:.55rem;color:#bdd1f3}
+.gear-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem;margin-top:.65rem}
+.gear-card{display:block;background:#1a2435;border:1px solid #324966;border-radius:10px;padding:.6rem;text-decoration:none;color:#e8f1ff}
+.gear-card strong{display:block;margin-bottom:.2rem}
+.gear-card span{color:#a8bbd7;font-size:.84rem}
+.gear-card:hover{border-color:#77d878}
 .change-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
 .change-card{background:#182232;border:1px solid #2f3f58;border-radius:10px;padding:.6rem}
 .change-card ul{margin:0;padding-left:1rem}
 .trending-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem}
 .trend-card{background:#182232;border:1px solid #2f3f58;border-radius:10px;padding:.6rem}
+.seo-copy p{color:#c2d2ea;margin:.45rem 0}
 @media (max-width: 900px){
   .change-grid{grid-template-columns:1fr}
 }

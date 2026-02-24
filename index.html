@@ -23,6 +23,7 @@
       <p class="kicker">TODAY'S META</p>
       <h1>WARZONE META TIER LIST</h1>
       <p class="section-sub">Fastest TTK picks, safest recoil beams, and daily trend movement in one place.</p>
+      <div class="meta-alert" id="meta-alert">🚨 META ALERT: New fastest TTK setup detected for close-range fights.</div>
       <div id="status-row" class="status-row">Last updated recently • Based on patch + community data • Auto-updated daily</div>
       <div id="top-meta" class="top-meta-grid"></div>
     </div>
@@ -75,6 +76,7 @@
           <span class="muted">Updated from current top S-tier pick</span>
         </div>
         <div id="loadout-card"></div>
+        <div id="affiliate-gear" class="affiliate-gear"></div>
       </section>
 
       <section id="meta-changes" class="content-card">
@@ -83,8 +85,14 @@
       </section>
 
       <section id="trending" class="content-card">
-        <h2>Trending Weapons</h2>
+        <div class="section-head"><h2>Trending Weapons</h2><p id="biggest-riser" class="muted">Biggest riser: —</p></div>
         <div id="trending-list" class="trending-grid"></div>
+      </section>
+
+      <section id="seo-copy" class="content-card seo-copy">
+        <h2>Warzone Meta Guide (Season Snapshot)</h2>
+        <p>Warzone Meta Hub tracks top-performing loadouts for Ranked, Resurgence, and Battle Royale with daily updates and patch-aware adjustments. Use the tier list filters above to quickly find the best AR, SMG, LMG, sniper, and shotgun options for your preferred mode.</p>
+        <p>Each weapon card includes key performance signals such as estimated TTK, control profile, and popularity trend so you can make faster loadout decisions. Click any card for attachment recommendations and matchup strengths.</p>
       </section>
     </div>
   </main>
@@ -161,6 +169,10 @@ function renderTopMeta(lastUpdated){
   const picks=weapons.filter(w=>w.tier==='S').slice(0,5);
   document.getElementById('top-meta').innerHTML=picks.map(w=>`<article class="top-meta-card"><h4>${esc(w.name)}</h4><p><span class="tiny-badge">${esc(w.tier)}</span> ${esc(reasonMap[w.name]||w.strengths?.[0]||'top current-season performer')}</p></article>`).join('');
   document.getElementById('status-row').textContent=`Last Updated: ${hoursAgo(lastUpdated)} • Based on patch + community data • Auto-updated daily`;
+  const hot=picks[0];
+  if(hot){
+    document.getElementById('meta-alert').textContent=`🚨 META ALERT: ${hot.name} is the current fastest TTK pressure pick in ${hot.mode}.`;
+  }
 }
 
 function renderTier(lastUpdated){
@@ -190,7 +202,8 @@ function openWeaponModal(id){
 function renderLoadout(){
   const best=weapons.find(w=>w.tier==='S') || weapons[0];
   if(!best) return;
-  document.getElementById('loadout-card').innerHTML=`<div class="loadout-card"><h3>${esc(best.name)}</h3><p class="muted">${esc(best.strengths?.[0]||'Best all-around pick right now')}</p><ul>${(best.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')}</ul><button class="copy-btn" id="copy-loadout">Copy Loadout</button><p class="affiliate-slot">Recommended Gear: <a href="shop.html">See affiliate setup →</a></p></div>`;
+  document.getElementById('loadout-card').innerHTML=`<div class="loadout-card"><h3>${esc(best.name)}</h3><p class="muted">${esc(best.strengths?.[0]||'Best all-around pick right now')}</p><ul>${(best.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')}</ul><div class="loadout-cta"><button class="copy-btn" id="copy-loadout">Copy Loadout</button><a class="copy-btn secondary" href="shop.html">Build This Setup</a></div><p class="affiliate-slot">Recommended Gear below converts this build into a complete setup.</p></div>`;
+  document.getElementById('affiliate-gear').innerHTML=`<div class='gear-grid'><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Low-Latency Controller</strong><span>Best for close-range movement fights</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Directional Audio Headset</strong><span>Hear pushes earlier in final circles</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Precision Thumbsticks</strong><span>Helps long-range recoil control</span></a></div>`;
   document.getElementById('copy-loadout').addEventListener('click',async()=>{
     const txt=`${best.name}\n${(best.attachments||[]).join('\n')}`;
     try{ await navigator.clipboard.writeText(txt); document.getElementById('copy-loadout').textContent='Copied'; }catch{}
@@ -205,7 +218,8 @@ function renderChanges(){
 
 function renderTrending(){
   const top=[...weapons].sort((a,b)=>popularityFor(b.name)-popularityFor(a.name)).slice(0,6);
-  document.getElementById('trending-list').innerHTML=top.map(w=>`<article class='trend-card'><h4>${esc(w.name)}</h4><p>${popularityFor(w.name)}% popularity <span class='trend trend-up'>↑</span></p></article>`).join('');
+  document.getElementById('trending-list').innerHTML=top.map((w,i)=>`<article class='trend-card'><h4>${esc(w.name)}</h4><p>${popularityFor(w.name)}% popularity <span class='trend ${i===0?'trend-up':'trend-flat'}'>${i===0?'↑':'→'}</span></p></article>`).join('');
+  if(top[0]) document.getElementById('biggest-riser').textContent=`Biggest riser today: ${top[0].name} ↑`;
 }
 
 function wireControls(lastUpdated){
