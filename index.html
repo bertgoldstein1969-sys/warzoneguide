@@ -84,108 +84,100 @@
 
 <script>
 const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json';
+const WEAPONS_URL = 'assets/weapons.json';
 const esc = (s='') => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = (d) => d ? new Date(d).toLocaleString() : 'Unknown';
 
-const fallbackTier = {
-  updatedAt:null,
-  tiers:{
-    S:['Kilo 141','AMAX','MCW 6.8','Razor 9mm','SVA 545'],
-    A:['HRM-9','RAM-7','BP50','HMR-9','DTIR 30-06'],
-    B:['Striker 9','Holger 556','MTZ-556','Lachmann Sub','WSP Swarm'],
-    C:['M16','BAS-B','PDSW 528','TAQ-56'],
-    D:['WSP-9','Kastov 545','Minibak'],
-    F:['Off-meta experimental builds']
-  }
-};
-
 const order=['S','A','B','C','D','F'];
-const classes=['ar','smg','lmg','sniper','shotgun'];
 let currentClass='all';
 let currentSearch='';
+let currentMode='all';
+let weapons=[];
 
-function pseudoStats(name){
-  const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
-  const dmg=72 + (seed % 26);
-  const rng=58 + ((seed>>2) % 38);
-  const ctl=60 + ((seed>>4) % 35);
-  const cls=classes[seed % classes.length];
-  return {dmg,rng,ctl,cls};
+function clsNorm(v=''){ return String(v).toLowerCase().replace('marksman','sniper').replace('melee','shotgun'); }
+
+function matches(w){
+  const wc=clsNorm(w.class);
+  const classOk = currentClass==='all' || wc===currentClass;
+  const searchOk = !currentSearch || w.name.toLowerCase().includes(currentSearch);
+  const mode = String(w.mode||'all').toLowerCase();
+  const modeOk = currentMode==='all' || mode.includes(currentMode);
+  return classOk && searchOk && modeOk;
 }
 
-function matches(name, cls){
-  const s = pseudoStats(name);
-  const classOk = currentClass==='all' || s.cls===currentClass;
-  const searchOk = !currentSearch || name.toLowerCase().includes(currentSearch);
-  return classOk && searchOk;
+function weaponCard(w){
+  const cls=clsNorm(w.class);
+  const thumb=`assets/gun-${cls}.svg`;
+  return `<article class="weapon-mini" data-id="${esc(w.id)}" data-class="${cls}"><img class="weapon-thumb" src="${thumb}" alt="${esc(w.class)} weapon" loading="lazy"/><h4>${esc(w.name)} <span class="wclass">${esc(w.class)}</span></h4><div class="weapon-stats"><span>DMG: ${esc(w.damage)}</span><span>RNG: ${esc(w.range)}</span><span>CTL: ${esc(w.control)}</span></div></article>`;
 }
 
-function renderTier(t){
-  const tiers=(t&&t.tiers)||fallbackTier.tiers;
-  document.getElementById('tier-last-updated').textContent=`Last checked: ${fmt((t&&t.updatedAt)||null)}`;
-
+function renderTier(){
+  const grouped = Object.fromEntries(order.map(t=>[t,[]]));
+  weapons.filter(matches).forEach(w=>{ const t=(w.tier||'F').toUpperCase(); if(grouped[t]) grouped[t].push(w); });
   const rows = order.map(tier=>{
-    const raw=(tiers[tier] && tiers[tier].length) ? tiers[tier] : ['No items ranked'];
-    const items=raw.filter(n=>matches(n, currentClass));
-    const finalItems=items.length?items:['No matching items'];
-    return `
-      <div class="tier-row tier-${tier.toLowerCase()}">
-        <div class="tier-badge">${tier}</div>
-        <div class="tier-weapons">
-          ${finalItems.map(name=>{
-            const s=pseudoStats(name);
-            const thumb=`assets/gun-${s.cls}.svg`;
-            return `<article class="weapon-mini" data-class="${s.cls}"><img class="weapon-thumb" src="${thumb}" alt="${s.cls.toUpperCase()} weapon" loading="lazy"/><h4>${esc(name)} <span class="wclass">${s.cls.toUpperCase()}</span></h4><div class="weapon-stats"><span>DMG: ${s.dmg}</span><span>RNG: ${s.rng}</span><span>CTL: ${s.ctl}</span></div></article>`;
-          }).join('')}
-        </div>
-      </div>
-    `;
+    const list=grouped[tier].length?grouped[tier]:[{id:'none',name:'No matching items',class:'',damage:'—',range:'—',control:'—',attachments:[],strengths:[],weaknesses:[]}];
+    return `<div class="tier-row tier-${tier.toLowerCase()}"><div class="tier-badge">${tier}</div><div class="tier-weapons">${list.map(weaponCard).join('')}</div></div>`;
   }).join('');
+  document.getElementById('tier-table').innerHTML=rows;
 
-  document.getElementById('tier-table').innerHTML = rows;
+  document.querySelectorAll('.weapon-mini[data-id]:not([data-id="none"])').forEach(el=>{
+    el.addEventListener('click',()=>openWeaponModal(el.dataset.id));
+  });
+}
+
+function openWeaponModal(id){
+  const w=weapons.find(x=>String(x.id)===String(id));
+  if(!w) return;
+  const modal=document.getElementById('weapon-modal');
+  document.getElementById('wm-title').textContent=w.name;
+  document.getElementById('wm-meta').textContent=`${w.class} • Tier ${w.tier} • Mode: ${w.mode}`;
+  document.getElementById('wm-stats').innerHTML=`<li>Damage: ${w.damage}</li><li>Range: ${w.range}</li><li>Mobility: ${w.mobility}</li><li>Control: ${w.control}</li>`;
+  document.getElementById('wm-attachments').innerHTML=(w.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>No recommended attachments listed</li>';
+  document.getElementById('wm-strengths').innerHTML=(w.strengths||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
+  document.getElementById('wm-weaknesses').innerHTML=(w.weaknesses||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
+  modal.classList.add('open');
 }
 
 function renderPatch(items){
   const el=document.getElementById('patch-list');
-  if(!items.length){
-    el.innerHTML='<article class="update"><h3>No fresh patch-note entries yet</h3><p class="muted">Auto-fill active; check back shortly.</p></article>';
-    return;
-  }
+  if(!items.length){ el.innerHTML='<article class="update"><h3>No fresh patch-note entries yet</h3><p class="muted">Auto-fill active; check back shortly.</p></article>'; return; }
   el.innerHTML=items.slice(0,3).map(it=>`<article class="update"><h3>${esc(it.title||'Update')}</h3><p>${esc(it.summary||'')}</p><p class="muted">${esc(it.source||'source')} · ${esc(fmt(it.publishedAt||it.observedAt))}</p></article>`).join('');
 }
 
-function wireControls(data){
-  document.querySelectorAll('#class-filters .chip').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      document.querySelectorAll('#class-filters .chip').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      currentClass=btn.dataset.class;
-      renderTier(data.tierList || fallbackTier);
-    });
-  });
-  document.getElementById('weapon-search').addEventListener('input',(e)=>{
-    currentSearch=e.target.value.trim().toLowerCase();
-    renderTier(data.tierList || fallbackTier);
-  });
+function wireControls(){
+  document.querySelectorAll('#class-filters .chip').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#class-filters .chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentClass=btn.dataset.class;renderTier();}));
+  document.querySelectorAll('#mode-tabs .tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#mode-tabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentMode=btn.dataset.mode;renderTier();}));
+  document.getElementById('weapon-search').addEventListener('input',(e)=>{currentSearch=e.target.value.trim().toLowerCase();renderTier();});
+  document.getElementById('wm-close').addEventListener('click',()=>document.getElementById('weapon-modal').classList.remove('open'));
+  document.getElementById('weapon-modal').addEventListener('click',(e)=>{if(e.target.id==='weapon-modal') e.currentTarget.classList.remove('open');});
 }
 
 (async()=>{
-  const status = document.getElementById('status-row');
+  const status=document.getElementById('status-row');
+  try{ weapons=(await (await fetch(WEAPONS_URL,{cache:'no-store'})).json()).weapons||[]; }catch{ weapons=[]; }
   try{
     const data = await (await fetch(DATA_URL,{cache:'no-store'})).json();
-    status.textContent = `Data feed updated: ${fmt(data.generatedAt)} • Auto-scrape active`;
-    renderTier(data.tierList || fallbackTier);
-    wireControls(data);
+    status.textContent = `Data feed updated: ${fmt(data.generatedAt)} • Weapons loaded: ${weapons.length}`;
     const patchLike = (data.patchNotes && data.patchNotes.items) || (data.items||[]).filter(i => /patch|notes|playlist|update|hotfix|season/i.test((i.title||'')+' '+(i.summary||'')));
     renderPatch(patchLike);
-  }catch(e){
-    status.textContent='Feed unavailable; using fallback.';
-    const data={tierList:fallbackTier,items:[]};
-    renderTier(fallbackTier);
-    wireControls(data);
-    renderPatch([]);
-  }
+  }catch(e){ status.textContent='Feed unavailable; using local weapon database.'; renderPatch([]); }
+  wireControls();
+  renderTier();
 })();
 </script>
+
+<div id="weapon-modal" class="wm-modal" aria-hidden="true">
+  <div class="wm-panel">
+    <button id="wm-close" class="wm-close">✕</button>
+    <h3 id="wm-title">Weapon</h3>
+    <p id="wm-meta" class="muted"></p>
+    <div class="wm-grid">
+      <div><h4>Stats</h4><ul id="wm-stats"></ul></div>
+      <div><h4>Recommended Attachments</h4><ul id="wm-attachments"></ul></div>
+      <div><h4>Strengths</h4><ul id="wm-strengths"></ul></div>
+      <div><h4>Weaknesses</h4><ul id="wm-weaknesses"></ul></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
