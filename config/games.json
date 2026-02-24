@@ -5,6 +5,9 @@
     "dataSource": "https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/weapon-trends.json",
     "newsSource": "https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json",
     "themeColor": "#00ff99",
+    "primary": "#00ff99",
+    "secondary": "#61f500",
+    "glow": "rgba(0,255,153,0.35)",
     "brandLabel": "Meta Hub"
   },
   "bo7": {
@@ -12,7 +15,10 @@
     "slug": "bo7",
     "dataSource": "./assets/weapons.json",
     "newsSource": "./assets/weapons.json",
-    "themeColor": "#ff3b3b",
+    "themeColor": "#ff7a00",
+    "primary": "#ff7a00",
+    "secondary": "#ff3c00",
+    "glow": "rgba(255,122,0,0.4)",
     "brandLabel": "Meta Hub"
   },
   "bf6": {
@@ -20,7 +26,10 @@
     "slug": "bf6",
     "dataSource": "./assets/weapons.json",
     "newsSource": "./assets/weapons.json",
-    "themeColor": "#53b7ff",
+    "themeColor": "#3b82f6",
+    "primary": "#3b82f6",
+    "secondary": "#1d4ed8",
+    "glow": "rgba(59,130,246,0.35)",
     "brandLabel": "Meta Hub"
   },
   "fortnite": {
