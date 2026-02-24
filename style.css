@@ -25,7 +25,8 @@ nav{
   border-bottom:1px solid var(--border);
   backdrop-filter:blur(8px);
 }
-.nav-logo{font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+.nav-logo{font-weight:800;letter-spacing:.4px;text-transform:uppercase;display:flex;align-items:center;gap:.55rem}
+.nav-logo-img{width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(143,255,95,.45))}
 .nav-links{list-style:none;display:flex;gap:1rem;margin:0;padding:0}
 .nav-links a{text-decoration:none;color:#d4fadd;font-weight:600;opacity:.92}
 .nav-links a:hover{opacity:1;color:var(--accent)}
@@ -37,7 +38,7 @@ nav{
 }
 .hero::before{
   content:'';position:absolute;inset:0;
-  background-image:url('https://images.unsplash.com/photo-1759167625074-4c61493a8c40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaWxpdGFyeSUyMHRhY3RpY2FsJTIwc29sZGllciUyMGNvbWJhdHxlbnwxfHx8fDE3NzE2NDM2MjB8MA&ixlib=rb-4.1.0&q=80&w=1920');
+  background-image:url('assets/hero-warzone.png');
   background-size:cover;background-position:center;
   opacity:.14;
 }
@@ -81,6 +82,7 @@ h3{font-size:1.25rem;margin:.4rem 0 .6rem;font-weight:800}
 .btn:hover{background:#63ff7e}
 .text-link{font-weight:600}
 footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color:#98a0ac}
+.page-hero-img{width:100%;max-height:320px;object-fit:cover;border:1px solid #2a313b;border-radius:12px;margin:.25rem 0 1rem;display:block}
 
 .tier-table{display:flex;flex-direction:column;gap:.7rem;margin-top:1rem}
 .tier-row{display:grid;grid-template-columns:66px 1fr;gap:.75rem;align-items:stretch;background:#161b24;border:1px solid #252e3d;border-radius:10px;padding:.55rem}
