@@ -224,6 +224,47 @@ html[data-game="bf6"] .hero::after{
     linear-gradient(180deg, rgba(18,24,33,.95) 0%, rgba(13,18,26,.98) 100%);
 }
 
+.bf6-class-tags{display:none;gap:.35rem;flex-wrap:wrap}
+.bf6-class-tags span{display:inline-block;padding:.22rem .5rem;border-radius:999px;background:#1a2534;border:1px solid #2f425c;color:#cddcf2;font-size:.72rem;letter-spacing:.2px}
+
+/* BO7 distinct identity */
+html[data-game="bo7"] .hero::before{opacity:.2;filter:contrast(1.18) saturate(1.08)}
+html[data-game="bo7"] .hero::after{
+  background:
+    radial-gradient(760px 280px at 90% 0%, rgba(255,122,0,.42), transparent 62%),
+    radial-gradient(560px 240px at 8% 96%, rgba(255,60,0,.30), transparent 70%),
+    linear-gradient(180deg, rgba(24,14,12,.96) 0%, rgba(12,10,10,.98) 100%),
+    radial-gradient(circle at center, rgba(255,255,255,.03) 0 1px, transparent 1px 100%);
+  background-size:auto,auto,auto,3px 3px;
+}
+html[data-game="bo7"] .hero{box-shadow:inset 0 0 140px rgba(0,0,0,.45)}
+html[data-game="bo7"] h1, html[data-game="bo7"] h2{font-weight:900;letter-spacing:-.03em}
+html[data-game="bo7"] .left-rail{border-color:#4a2a1a}
+html[data-game="bo7"] .left-rail a:hover{box-shadow:0 0 14px rgba(255,122,0,.22)}
+html[data-game="bo7"] .meta-alert{animation:bo7pulse 1.8s ease-in-out infinite alternate; background:linear-gradient(90deg, rgba(255,122,0,.22), rgba(255,60,0,.16));}
+html[data-game="bo7"] .weapon-mini:hover{transition:all .12s ease}
+html[data-game="bo7"] .copy-btn, html[data-game="bo7"] .tab, html[data-game="bo7"] .chip, html[data-game="bo7"] .gear-card{transition:all .12s ease}
+html[data-game="bo7"] .top-meta-card:first-child{position:relative}
+html[data-game="bo7"] .top-meta-card:first-child::before{content:'HOT LOADOUT';position:absolute;top:-9px;right:10px;background:#ff7a00;color:#120d08;border:1px solid #ff9d47;border-radius:999px;padding:.1rem .45rem;font-size:.62rem;font-weight:900;letter-spacing:.3px;box-shadow:0 0 10px rgba(255,122,0,.35)}
+@keyframes bo7pulse{from{box-shadow:0 0 0 rgba(255,122,0,0)}to{box-shadow:0 0 14px rgba(255,122,0,.22)}}
+
+/* BF6 distinct identity */
+html[data-game="bf6"] .hero::before{opacity:.12;filter:saturate(.82) contrast(.95)}
+html[data-game="bf6"] .hero::after{
+  background:
+    radial-gradient(760px 250px at 90% 0%, rgba(59,130,246,.15), transparent 62%),
+    radial-gradient(520px 210px at 12% 95%, rgba(29,78,216,.10), transparent 68%),
+    linear-gradient(180deg, rgba(17,23,31,.96) 0%, rgba(12,17,24,.99) 100%);
+}
+html[data-game="bf6"] h1, html[data-game="bf6"] h2{font-weight:760;letter-spacing:-.01em}
+html[data-game="bf6"] .left-rail{border-color:#273545;background:#121a24}
+html[data-game="bf6"] .left-rail a{border-color:#2a3a4f;background:#172130}
+html[data-game="bf6"] .left-rail a:hover{box-shadow:none;background:#1d2a3d;border-color:#3a4f69}
+html[data-game="bf6"] .meta-alert{padding:.42rem .62rem;border-color:#2d4f79;background:#1a2a40;color:#cfe3ff;animation:none}
+html[data-game="bf6"] .weapon-mini:hover{box-shadow:none;border-color:#3e5573;transition:all .2s ease}
+html[data-game="bf6"] .copy-btn, html[data-game="bf6"] .tab, html[data-game="bf6"] .chip, html[data-game="bf6"] .gear-card{box-shadow:none;transition:background .22s ease,border-color .22s ease,color .22s ease}
+html[data-game="bf6"] .bf6-class-tags{display:flex}
+
 @media (max-width: 900px){
   .change-grid{grid-template-columns:1fr}
   .sticky-meta{top:50px}
