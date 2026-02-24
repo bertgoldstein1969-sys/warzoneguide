@@ -125,7 +125,8 @@
 
 <script>
 const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/warzone-data.json';
-const WEAPONS_URL = 'assets/weapons.json';
+const WEAPONS_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/warzone-data@main/weapon-trends.json';
+const LOCAL_WEAPONS_URL = 'assets/weapons.json';
 const esc = (s='') => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = (d) => d ? new Date(d).toLocaleString() : 'Unknown';
 const hoursAgo = (d) => {
@@ -145,15 +146,58 @@ const reasonMap={
 };
 
 function clsNorm(v=''){ return String(v).toLowerCase().replace('marksman','sniper').replace('melee','shotgun'); }
-function trendFor(name){ const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0); return (seed%3===0?'up':seed%3===1?'down':'flat'); }
-function popularityFor(name){ const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0); return 35 + (seed % 46); }
-function ttkFor(w){ return Math.max(380, 760 - (w.damage*2) - (w.control)); }
+function trendFor(name){
+  const found = weapons.find(w=>w.name===name && w.trend);
+  if (found?.trend) return found.trend;
+  const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
+  return (seed%3===0?'up':seed%3===1?'down':'flat');
+}
+function popularityFor(name){
+  const found = weapons.find(w=>w.name===name && typeof w.popularity==='number');
+  if (typeof found?.popularity === 'number') return found.popularity;
+  const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
+  return 35 + (seed % 46);
+}
+function ttkFor(w){
+  if (typeof w.ttk === 'number') return w.ttk;
+  return Math.max(380, 760 - (w.damage*2) - (w.control));
+}
 function patchImpactFor(w){
+  if (typeof w.patchImpactScore === 'number') return w.patchImpactScore;
   const trend = trendFor(w.name);
   const trendPts = trend==='up' ? 14 : trend==='down' ? -14 : 0;
   const popPts = Math.round((popularityFor(w.name)-50)*0.6);
   const tierBase = {S:88, A:76, B:63, C:50, D:40, F:28}[String(w.tier||'F').toUpperCase()] || 35;
   return Math.max(0, Math.min(100, tierBase + trendPts + popPts));
+}
+
+function normalizeTrendWeapons(trendDoc, localDoc){
+  const localMap = new Map((localDoc?.weapons||[]).map(w=>[w.name, w]));
+  const inWeapons = trendDoc?.weapons || [];
+  return inWeapons.map(w=>{
+    const name = w.weaponName || w.name;
+    const local = localMap.get(name) || {};
+    return {
+      id: w.id || local.id || name,
+      name,
+      class: w.class || local.class || 'AR',
+      tier: w.tier || local.tier || 'B',
+      mode: w.mode || local.mode || 'All',
+      damage: w.damage ?? local.damage ?? 80,
+      range: w.range ?? local.range ?? 75,
+      mobility: w.mobility ?? local.mobility ?? 75,
+      control: w.control ?? local.control ?? 75,
+      strengths: w.strengths || local.strengths || [],
+      weaknesses: w.weaknesses || local.weaknesses || [],
+      attachments: w.attachments || local.attachments || [],
+      popularity: w.popularity,
+      trend: w.trend,
+      deltaScore: w.deltaScore,
+      deltaPopularity: w.deltaPopularity,
+      patchImpactScore: w.patchImpactScore,
+      tierChange: w.tierChange || 0
+    };
+  });
 }
 
 function matches(w){
@@ -229,21 +273,23 @@ function renderLoadout(lastUpdated){
 }
 
 function renderChanges(){
-  const byRise=[...weapons].sort((a,b)=>(popularityFor(b.name)-popularityFor(a.name)));
-  const topRiser=byRise[0], topDrop=byRise[byRise.length-1], newS=weapons.find(w=>w.tier==='S' && trendFor(w.name)==='up') || weapons.find(w=>w.tier==='S');
+  const byDelta=[...weapons].sort((a,b)=>(b.deltaScore||0)-(a.deltaScore||0));
+  const topRiser=byDelta[0], topDrop=byDelta[byDelta.length-1];
+  const newS=weapons.find(w=>w.tier==='S' && (w.tierChange||0)>0) || weapons.find(w=>w.tier==='S');
   const buffed=weapons.filter(w=>trendFor(w.name)==='up').slice(0,3);
   const nerfed=weapons.filter(w=>trendFor(w.name)==='down').slice(0,3);
   document.getElementById('meta-changes-list').innerHTML=`
-  <article class="change-card"><h4>📈 Top Riser</h4><p>${esc(topRiser?.name||'—')} <span class='trend trend-up'>↑</span></p><small>${topRiser?popularityFor(topRiser.name):0}% popularity</small></article>
-  <article class="change-card"><h4>📉 Biggest Drop</h4><p>${esc(topDrop?.name||'—')} <span class='trend trend-down'>↓</span></p><small>${topDrop?popularityFor(topDrop.name):0}% popularity</small></article>
+  <article class="change-card"><h4>📈 Top Riser</h4><p>${esc(topRiser?.name||'—')} <span class='trend trend-up'>↑</span></p><small>Δ Score: ${topRiser?.deltaScore??0} • Δ Pop: ${topRiser?.deltaPopularity??0}</small></article>
+  <article class="change-card"><h4>📉 Biggest Drop</h4><p>${esc(topDrop?.name||'—')} <span class='trend trend-down'>↓</span></p><small>Δ Score: ${topDrop?.deltaScore??0} • Δ Pop: ${topDrop?.deltaPopularity??0}</small></article>
   <article class="change-card"><h4>⭐ Newly S-Tier Watch</h4><p>${esc(newS?.name||'—')}</p><small>${esc(newS?.mode||'all modes')}</small></article>
   <article class="change-card"><h4>Buffed / Nerfed</h4><small>Buffed: ${buffed.map(w=>esc(w.name)).join(', ')||'—'}<br/>Nerfed: ${nerfed.map(w=>esc(w.name)).join(', ')||'—'}</small></article>`;
 }
 
 function renderTrending(){
   const top=[...weapons].sort((a,b)=>popularityFor(b.name)-popularityFor(a.name)).slice(0,6);
-  document.getElementById('trending-list').innerHTML=top.map((w,i)=>`<article class='trend-card'><h4>${esc(w.name)}</h4><p>${popularityFor(w.name)}% popularity <span class='trend ${i===0?'trend-up':'trend-flat'}'>${i===0?'↑':'→'}</span></p></article>`).join('');
-  if(top[0]) document.getElementById('biggest-riser').textContent=`Biggest riser today: ${top[0].name} ↑`;
+  document.getElementById('trending-list').innerHTML=top.map((w)=>`<article class='trend-card'><h4>${esc(w.name)}</h4><p>${popularityFor(w.name)}% popularity <span class='trend ${trendFor(w.name)==='up'?'trend-up':trendFor(w.name)==='down'?'trend-down':'trend-flat'}'>${trendFor(w.name)==='up'?'↑':trendFor(w.name)==='down'?'↓':'→'}</span></p></article>`).join('');
+  const riser=[...weapons].sort((a,b)=>(b.deltaScore||0)-(a.deltaScore||0))[0];
+  if(riser) document.getElementById('biggest-riser').textContent=`Biggest riser today: ${riser.name} ↑ (Δ ${riser.deltaScore||0})`;
 }
 
 function wireControls(lastUpdated){
@@ -258,7 +304,19 @@ function wireControls(lastUpdated){
 
 (async()=>{
   let lastUpdated=null;
-  try{ const wd=await (await fetch(WEAPONS_URL,{cache:'no-store'})).json(); weapons=wd.weapons||[]; lastUpdated=wd.lastUpdated||null; }catch{ weapons=[]; }
+  let trendDoc=null;
+  let localDoc={weapons:[]};
+  try{ trendDoc=await (await fetch(WEAPONS_URL,{cache:'no-store'})).json(); }catch{}
+  try{ localDoc=await (await fetch(LOCAL_WEAPONS_URL,{cache:'no-store'})).json(); }catch{}
+
+  if(trendDoc?.weapons?.length){
+    weapons = normalizeTrendWeapons(trendDoc, localDoc);
+    lastUpdated = trendDoc.generatedAt || trendDoc.date || null;
+  }else{
+    weapons = (localDoc.weapons||[]).map(w=>({ ...w, weaponName:w.name }));
+    lastUpdated = localDoc.lastUpdated || null;
+  }
+
   try{ const data=await (await fetch(DATA_URL,{cache:'no-store'})).json(); lastUpdated=lastUpdated||data.generatedAt; }catch{}
   renderTopMeta(lastUpdated);
   renderTier(lastUpdated);
