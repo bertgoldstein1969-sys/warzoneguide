@@ -3,7 +3,18 @@
   const routeKey = location.pathname.split('/').filter(Boolean)[0] || '';
   const gameKey = params.get('game') || (['warzone','bo7','bf6','fortnite'].includes(routeKey) ? routeKey : (localStorage.getItem('meta_game') || 'warzone'));
   try {
-    const cfg = await (await fetch('config/games.json', {cache:'no-store'})).json();
+    async function loadConfig(){
+      const tries = ['/config/games.json','../config/games.json','config/games.json'];
+      for (const p of tries){
+        try {
+          const r = await fetch(p, {cache:'no-store'});
+          if (r.ok) return await r.json();
+        } catch {}
+      }
+      throw new Error('games.json not reachable');
+    }
+
+    const cfg = await loadConfig();
     const game = cfg[gameKey] || cfg.warzone;
     const resolvedKey = Object.keys(cfg).includes(gameKey) ? gameKey : 'warzone';
     localStorage.setItem('meta_game', resolvedKey);
