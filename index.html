@@ -27,29 +27,54 @@
     </div>
   </header>
 
-  <main class="section">
-    <section id="tier-list">
-      <div class="section-head">
-        <h2>TIER RANKINGS</h2>
-        <p id="tier-last-updated" class="muted">Last checked: loading…</p>
-      </div>
-      <div id="tier-table" class="tier-table">
-        <div class="tier-row tier-s"><div class="tier-badge">S</div><div class="tier-weapons"><article class="weapon-mini"><h4>Kilo 141</h4><div class="weapon-stats"><span>DMG: 92</span><span>RNG: 88</span><span>CTL: 90</span></div></article><article class="weapon-mini"><h4>AMAX</h4><div class="weapon-stats"><span>DMG: 90</span><span>RNG: 84</span><span>CTL: 88</span></div></article></div></div>
-        <div class="tier-row tier-a"><div class="tier-badge">A</div><div class="tier-weapons"><article class="weapon-mini"><h4>MCW</h4><div class="weapon-stats"><span>DMG: 87</span><span>RNG: 82</span><span>CTL: 86</span></div></article><article class="weapon-mini"><h4>HRM-9</h4><div class="weapon-stats"><span>DMG: 85</span><span>RNG: 78</span><span>CTL: 84</span></div></article></div></div>
-        <div class="tier-row tier-b"><div class="tier-badge">B</div><div class="tier-weapons"><article class="weapon-mini"><h4>Rival-9</h4><div class="weapon-stats"><span>DMG: 82</span><span>RNG: 76</span><span>CTL: 80</span></div></article><article class="weapon-mini"><h4>Holger</h4><div class="weapon-stats"><span>DMG: 80</span><span>RNG: 74</span><span>CTL: 78</span></div></article></div></div>
-        <div class="tier-row tier-c"><div class="tier-badge">C</div><div class="tier-weapons"><article class="weapon-mini"><h4>Striker 9</h4><div class="weapon-stats"><span>DMG: 77</span><span>RNG: 70</span><span>CTL: 74</span></div></article></div></div>
-        <div class="tier-row tier-d"><div class="tier-badge">D</div><div class="tier-weapons"><article class="weapon-mini"><h4>WSP-9</h4><div class="weapon-stats"><span>DMG: 74</span><span>RNG: 66</span><span>CTL: 70</span></div></article></div></div>
-        <div class="tier-row tier-f"><div class="tier-badge">F</div><div class="tier-weapons"><article class="weapon-mini"><h4>Off-meta builds</h4><div class="weapon-stats"><span>DMG: —</span><span>RNG: —</span><span>CTL: —</span></div></article></div></div>
-      </div>
-    </section>
+  <main class="section main-grid">
+    <aside class="left-rail">
+      <h3>QUICK NAV</h3>
+      <a href="#tier-list">Meta Ranking</a>
+      <a href="#patch-preview">Patch Preview</a>
+      <a href="patch-notes.html">Full Patch Notes</a>
+      <a href="shop.html">Gear Shop</a>
+      <a href="updates.html">News Feed</a>
+    </aside>
 
-    <section id="patch-preview">
-      <div class="section-head">
-        <h2>Latest Patch Notes (Preview)</h2>
-        <a href="patch-notes.html" class="text-link">Open full patch notes page →</a>
-      </div>
-      <div id="patch-list" class="update-list"></div>
-    </section>
+    <div class="main-content">
+      <section id="tier-list">
+        <div class="section-head">
+          <h2>TIER RANKINGS</h2>
+          <p id="tier-last-updated" class="muted">Last checked: loading…</p>
+        </div>
+
+        <div class="controls-bar">
+          <div class="mode-tabs" id="mode-tabs">
+            <button class="tab active" data-mode="all">All Modes</button>
+            <button class="tab" data-mode="ranked">Ranked</button>
+            <button class="tab" data-mode="resurgence">Resurgence</button>
+            <button class="tab" data-mode="br">Battle Royale</button>
+          </div>
+          <div class="filter-row">
+            <input id="weapon-search" class="search" placeholder="Search weapons..." />
+            <div class="class-filters" id="class-filters">
+              <button class="chip active" data-class="all">All</button>
+              <button class="chip" data-class="ar">AR</button>
+              <button class="chip" data-class="smg">SMG</button>
+              <button class="chip" data-class="lmg">LMG</button>
+              <button class="chip" data-class="sniper">Sniper</button>
+              <button class="chip" data-class="shotgun">Shotgun</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="tier-table" class="tier-table"></div>
+      </section>
+
+      <section id="patch-preview">
+        <div class="section-head">
+          <h2>Latest Patch Notes (Preview)</h2>
+          <a href="patch-notes.html" class="text-link">Open full patch notes page →</a>
+        </div>
+        <div id="patch-list" class="update-list"></div>
+      </section>
+    </div>
   </main>
 
   <footer>
@@ -75,13 +100,24 @@ const fallbackTier = {
 };
 
 const order=['S','A','B','C','D','F'];
+const classes=['ar','smg','lmg','sniper','shotgun'];
+let currentClass='all';
+let currentSearch='';
 
 function pseudoStats(name){
   const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
   const dmg=72 + (seed % 26);
   const rng=58 + ((seed>>2) % 38);
   const ctl=60 + ((seed>>4) % 35);
-  return {dmg,rng,ctl};
+  const cls=classes[seed % classes.length];
+  return {dmg,rng,ctl,cls};
+}
+
+function matches(name, cls){
+  const s = pseudoStats(name);
+  const classOk = currentClass==='all' || s.cls===currentClass;
+  const searchOk = !currentSearch || name.toLowerCase().includes(currentSearch);
+  return classOk && searchOk;
 }
 
 function renderTier(t){
@@ -89,14 +125,16 @@ function renderTier(t){
   document.getElementById('tier-last-updated').textContent=`Last checked: ${fmt((t&&t.updatedAt)||null)}`;
 
   const rows = order.map(tier=>{
-    const items=(tiers[tier] && tiers[tier].length) ? tiers[tier] : ['No items ranked'];
+    const raw=(tiers[tier] && tiers[tier].length) ? tiers[tier] : ['No items ranked'];
+    const items=raw.filter(n=>matches(n, currentClass));
+    const finalItems=items.length?items:['No matching items'];
     return `
       <div class="tier-row tier-${tier.toLowerCase()}">
         <div class="tier-badge">${tier}</div>
         <div class="tier-weapons">
-          ${items.map(name=>{
+          ${finalItems.map(name=>{
             const s=pseudoStats(name);
-            return `<article class="weapon-mini"><h4>${esc(name)}</h4><div class="weapon-stats"><span>DMG: ${s.dmg}</span><span>RNG: ${s.rng}</span><span>CTL: ${s.ctl}</span></div></article>`;
+            return `<article class="weapon-mini" data-class="${s.cls}"><h4>${esc(name)} <span class="wclass">${s.cls.toUpperCase()}</span></h4><div class="weapon-stats"><span>DMG: ${s.dmg}</span><span>RNG: ${s.rng}</span><span>CTL: ${s.ctl}</span></div></article>`;
           }).join('')}
         </div>
       </div>
@@ -115,17 +153,35 @@ function renderPatch(items){
   el.innerHTML=items.slice(0,3).map(it=>`<article class="update"><h3>${esc(it.title||'Update')}</h3><p>${esc(it.summary||'')}</p><p class="muted">${esc(it.source||'source')} · ${esc(fmt(it.publishedAt||it.observedAt))}</p></article>`).join('');
 }
 
+function wireControls(data){
+  document.querySelectorAll('#class-filters .chip').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#class-filters .chip').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentClass=btn.dataset.class;
+      renderTier(data.tierList || fallbackTier);
+    });
+  });
+  document.getElementById('weapon-search').addEventListener('input',(e)=>{
+    currentSearch=e.target.value.trim().toLowerCase();
+    renderTier(data.tierList || fallbackTier);
+  });
+}
+
 (async()=>{
   const status = document.getElementById('status-row');
   try{
     const data = await (await fetch(DATA_URL,{cache:'no-store'})).json();
     status.textContent = `Data feed updated: ${fmt(data.generatedAt)} • Auto-scrape active`;
     renderTier(data.tierList || fallbackTier);
+    wireControls(data);
     const patchLike = (data.patchNotes && data.patchNotes.items) || (data.items||[]).filter(i => /patch|notes|playlist|update|hotfix|season/i.test((i.title||'')+' '+(i.summary||'')));
     renderPatch(patchLike);
   }catch(e){
     status.textContent='Feed unavailable; using fallback.';
+    const data={tierList:fallbackTier,items:[]};
     renderTier(fallbackTier);
+    wireControls(data);
     renderPatch([]);
   }
 })();
