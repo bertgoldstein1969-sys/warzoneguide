@@ -15,9 +15,9 @@
     "themeColor": "#ff3b3b",
     "brandLabel": "Meta Hub"
   },
-  "battlefield": {
-    "name": "Battlefield",
-    "slug": "battlefield",
+  "bf6": {
+    "name": "Battlefield 6",
+    "slug": "bf6",
     "dataSource": "./assets/weapons.json",
     "newsSource": "./assets/weapons.json",
     "themeColor": "#53b7ff",

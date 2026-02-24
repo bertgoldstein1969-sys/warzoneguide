@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Black Ops 7 Patch Notes & Meta Winners — Meta Hub</title>
+  <meta name="description" content="Black Ops 7 patch notes summary with buffed and nerfed weapons, biggest winners/losers, and tier changes." />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" type="image/png" href="../assets/logo-wm.png" />
+  <meta name="x-game" content="bo7" />
+</head>
+<body>
+<nav>
+  <div class="nav-logo"><img src="../assets/logo-shield.png" alt="Black Ops 7 Meta Hub logo" class="nav-logo-img"/><span data-brand>Black Ops 7 Meta Hub</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Tier List</a></li>
+    <li><a href="patch-notes.html">Patch Notes</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="updates.html">News</a></li>
+  </ul>
+</nav>
+<div class="section">
+  <div class="section-head">
+    <h1>Patch Notes Intel</h1>
+    <p id="updated" class="muted">Last updated recently</p>
+  </div>
+  <img src="../assets/ops-room-a.png" alt="Black Ops 7 command center visual" class="page-hero-img" />
+
+  <section class="content-card">
+    <div class="section-head"><h2>Patch Summary</h2><p id="patch-version" class="muted">Version: current season</p></div>
+    <p id="patch-summary" class="muted">This patch shifts close-range pressure toward high-control SMGs while long-range AR consistency remains king. Expect ranked lobbies to favor stable beams with low recoil penalties.</p>
+  </section>
+
+  <section class="content-card">
+    <h2>Biggest Winners / Losers</h2>
+    <div id="winners-losers" class="change-grid"></div>
+  </section>
+
+  <section class="content-card">
+    <h2>Buffed / Nerfed Weapons</h2>
+    <div id="buff-nerf" class="change-grid"></div>
+  </section>
+
+  <section class="content-card">
+    <h2>Tier Changes</h2>
+    <div id="tier-changes" class="update-list"></div>
+  </section>
+
+  <section class="content-card">
+    <div class="section-head"><h2>Patch Note Sources</h2><a href="index.html" class="text-link">Back to Tier List →</a></div>
+    <div id="notes" class="update-list"></div>
+  </section>
+</div>
+<footer><p>Black Ops 7 Meta Hub — fan-run site.</p><p class="muted"><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate-disclosure.html">Affiliate Disclosure</a></p></footer>
+<script>
+const DATA_URL='https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/bo7-data@main/bo7-data.json';
+const TRENDS_URL='https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/bo7-data@main/weapon-trends.json';
+const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>d?new Date(d).toLocaleString():'Unknown';
+const card=({title,body,url,meta})=>`<article class="update"><h3>${esc(title||'Untitled')}</h3>${body?`<p>${esc(body)}</p>`:''}${url?`<p><a target="_blank" rel="noopener" href="${esc(url)}">Source →</a></p>`:''}${meta?`<p class="muted">${esc(meta)}</p>`:''}</article>`;
+(async()=>{
+  const notesEl=document.getElementById('notes');
+  let data={items:[],patchNotes:{items:[]}};
+  let trends={weapons:[],summary:{}};
+  try{ data=await (await fetch(DATA_URL,{cache:'no-store'})).json(); }catch{}
+  try{ trends=await (await fetch(TRENDS_URL,{cache:'no-store'})).json(); }catch{}
+
+  document.getElementById('updated').textContent=`Updated: ${fmt((trends.generatedAt||data.generatedAt))}`;
+  document.getElementById('patch-version').textContent=`Version: ${data?.tierList?.method ? 'Meta engine active' : 'Current season'}`;
+
+  const tw=[...(trends.weapons||[])];
+  const byDelta=[...tw].sort((a,b)=>(b.deltaScore||0)-(a.deltaScore||0));
+  const riser=byDelta[0], drop=byDelta[byDelta.length-1];
+  document.getElementById('winners-losers').innerHTML=`
+    <article class='change-card'><h4>🏆 Biggest Winner</h4><p>${esc(riser?.weaponName||'—')}</p><small>Δ Score: ${riser?.deltaScore??0} • Δ Popularity: ${riser?.deltaPopularity??0}</small></article>
+    <article class='change-card'><h4>⚠️ Biggest Loser</h4><p>${esc(drop?.weaponName||'—')}</p><small>Δ Score: ${drop?.deltaScore??0} • Δ Popularity: ${drop?.deltaPopularity??0}</small></article>`;
+
+  const buffed=tw.filter(w=>w.trend==='up').slice(0,6);
+  const nerfed=tw.filter(w=>w.trend==='down').slice(0,6);
+  document.getElementById('buff-nerf').innerHTML=`
+    <article class='change-card'><h4>Buffed</h4><ul>${buffed.map(w=>`<li><a href='index.html?weapon=${encodeURIComponent(w.weaponName)}'>${esc(w.weaponName)}</a> ↑</li>`).join('')||'<li>None</li>'}</ul></article>
+    <article class='change-card'><h4>Nerfed</h4><ul>${nerfed.map(w=>`<li><a href='index.html?weapon=${encodeURIComponent(w.weaponName)}'>${esc(w.weaponName)}</a> ↓</li>`).join('')||'<li>None</li>'}</ul></article>`;
+
+  const tierShift=tw.filter(w=>(w.tierChange||0)!==0).slice(0,12);
+  document.getElementById('tier-changes').innerHTML = tierShift.length ? tierShift.map(w=>card({
+    title:w.weaponName,
+    body:`Tier change detected: ${w.tierChange>0?`up ${w.tierChange}`:`down ${Math.abs(w.tierChange)}`}. Patch Impact ${w.patchImpactScore}/100.`,
+    url:`index.html?weapon=${encodeURIComponent(w.weaponName)}`,
+    meta:`Current tier: ${w.tier} • Delta score: ${w.deltaScore}`
+  })).join('') : '<article class="update"><h3>No tier changes yet</h3><p class="muted">System is collecting day-over-day movement.</p></article>';
+
+  const patchItems=(data.patchNotes&&data.patchNotes.items)||[];
+  notesEl.innerHTML=patchItems.length?patchItems.map(it=>card({title:it.title||'Update',body:it.summary||'',url:it.url||'#',meta:[it.source||'source',fmt(it.publishedAt||it.observedAt)].join(' • ')})).join(''):'<article class="update"><h3>No patch source items yet</h3><p class="muted">Source feed currently empty/blocked.</p></article>';
+})();
+</script>
+<script src="../assets/app-config.js"></script>
+</body>
+</html>

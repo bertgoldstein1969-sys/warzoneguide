@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battlefield 6 Tier List — Meta Hub</title>
+  <meta name="description" content="Live Battlefield 6 tier list with top loadouts, trend shifts, and patch-driven weapon rankings." />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" type="image/png" href="../assets/logo-wm.png" />
+  <meta name="x-game" content="bf6" />
+</head>
+<body>
+  <header class="hero">
+    <nav>
+      <div class="nav-logo"><img src="../assets/logo-shield.png" alt="Battlefield 6 Meta Hub logo" class="nav-logo-img"/><span data-brand>Battlefield 6 Meta Hub</span></div>
+      <ul class="nav-links">
+        <li><a href="index.html">Tier List</a></li>
+        <li><a href="patch-notes.html">Patch Notes</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="updates.html">News</a></li>
+      </ul>
+    </nav>
+    <div class="hero-inner section">
+      <p class="kicker">TODAY'S META</p>
+      <h1>WARZONE BEST LOADOUTS / WEAPONS</h1>
+      <p class="section-sub">Fastest TTK picks, safest recoil beams, and daily trend movement in one place.</p>
+      <div class="meta-alert" id="meta-alert">🚨 META ALERT: New fastest TTK setup detected for close-range fights.</div>
+      <div id="status-row" class="status-row">Last updated recently • Based on patch + community data • Auto-updated daily</div>
+      <div id="top-meta" class="top-meta-grid"></div>
+    </div>
+  </header>
+
+  <div id="sticky-meta" class="sticky-meta">
+    <div class="sticky-inner">
+      <strong>🔥 TOP META RIGHT NOW</strong>
+      <div id="sticky-meta-items" class="sticky-meta-items"></div>
+    </div>
+  </div>
+
+  <main class="section main-grid">
+    <aside class="left-rail">
+      <h3>QUICK NAV</h3>
+      <a href="#tier-list">Meta Ranking</a>
+      <a href="#best-loadout">Best Loadout</a>
+      <a href="#meta-changes">Meta Changes</a>
+      <a href="#trending">Trending Weapons</a>
+      <a href="patch-notes.html">Patch Notes</a>
+      <a href="shop.html">Gear Shop</a>
+    </aside>
+
+    <div class="main-content">
+      <section id="tier-list">
+        <div class="section-head">
+          <h2>BEST LOADOUTS / WEAPONS</h2>
+          <p id="tier-last-updated" class="muted">Updated recently</p>
+        </div>
+
+        <div class="controls-bar">
+          <div class="mode-tabs" id="mode-tabs">
+            <button class="tab active" data-mode="all">All Modes</button>
+            <button class="tab" data-mode="ranked">Ranked</button>
+            <button class="tab" data-mode="resurgence">Resurgence</button>
+            <button class="tab" data-mode="br">Battle Royale</button>
+          </div>
+          <div class="filter-row">
+            <input id="weapon-search" class="search" placeholder="Search weapons..." />
+            <div class="class-filters" id="class-filters">
+              <button class="chip active" data-class="all">All</button>
+              <button class="chip" data-class="ar">AR</button>
+              <button class="chip" data-class="smg">SMG</button>
+              <button class="chip" data-class="lmg">LMG</button>
+              <button class="chip" data-class="sniper">Sniper</button>
+              <button class="chip" data-class="shotgun">Shotgun</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="tier-table" class="tier-table"></div>
+      </section>
+
+      <section id="best-loadout" class="content-card">
+        <div class="section-head">
+          <h2>Best Loadout Right Now</h2>
+          <span class="muted">Updated from current top S-tier pick</span>
+        </div>
+        <div id="loadout-card"></div>
+        <div id="share-loadout" class="share-loadout"></div>
+        <div id="affiliate-gear" class="affiliate-gear"></div>
+      </section>
+
+      <section id="meta-changes" class="content-card">
+        <h2>Meta Changes (Last 24h)</h2>
+        <div id="meta-changes-list" class="change-grid"></div>
+      </section>
+
+      <section id="trending" class="content-card">
+        <div class="section-head"><h2>Trending Weapons</h2><p id="biggest-riser" class="muted">Biggest riser: —</p></div>
+        <div id="trending-list" class="trending-grid"></div>
+      </section>
+
+
+      <section id="bf6-classes" class="content-card">
+        <h2>Class Meta (BF6)</h2>
+        <div class="change-grid">
+          <article class="change-card"><h4>Assault</h4><p>Expected Meta: High-velocity AR + mobility perks.</p></article>
+          <article class="change-card"><h4>Engineer</h4><p>Expected Meta: anti-vehicle launchers + close-mid carbines.</p></article>
+          <article class="change-card"><h4>Recon</h4><p>Expected Meta: high-control DMR/sniper picks for sightline control.</p></article>
+          <article class="change-card"><h4>Support</h4><p>Expected Meta: sustained-fire LMG anchors and utility loadouts.</p></article>
+        </div>
+      </section>
+
+      <section id="bf6-vehicles" class="content-card">
+        <h2>Vehicle Meta</h2>
+        <div class="change-grid">
+          <article class="change-card"><h4>Armor</h4><p>Best Loadouts: anti-armor rockets + engineer coordination.</p></article>
+          <article class="change-card"><h4>Air</h4><p>Best Loadouts: lock-on + mobility counter picks.</p></article>
+        </div>
+      </section>
+      <section id="seo-copy" class="content-card seo-copy">
+        <h2>Battlefield 6 Meta Guide (Season Snapshot)</h2>
+        <p>Battlefield 6 Meta Hub tracks top-performing loadouts for Ranked, Resurgence, and Battle Royale with daily updates and patch-aware adjustments. Use the tier list filters above to quickly find the best AR, SMG, LMG, sniper, and shotgun options for your preferred mode.</p>
+        <p>Each weapon card includes key performance signals such as estimated TTK, control profile, and popularity trend so you can make faster loadout decisions. Click any card for attachment recommendations and matchup strengths.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Battlefield 6 Meta Hub — fan-run site, not affiliated with Activision.</p>
+    <p class="muted"><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="affiliate-disclosure.html">Affiliate Disclosure</a></p>
+  </footer>
+
+  <div id="scroll-cta" class="scroll-cta"><button id="scroll-copy" class="copy-btn">Copy Best Loadout Now</button></div>
+
+<div id="weapon-modal" class="wm-modal" aria-hidden="true">
+  <div class="wm-panel">
+    <button id="wm-close" class="wm-close">✕</button>
+    <h3 id="wm-title">Weapon</h3>
+    <p id="wm-meta" class="muted"></p>
+    <div class="wm-grid">
+      <div><h4>Stats</h4><ul id="wm-stats"></ul></div>
+      <div><h4>Recommended Attachments</h4><ul id="wm-attachments"></ul></div>
+      <div><h4>Strengths</h4><ul id="wm-strengths"></ul></div>
+      <div><h4>Weaknesses</h4><ul id="wm-weaknesses"></ul></div>
+      <div><h4>Related Weapons</h4><ul id="wm-related"></ul></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/bf6-data@main/bf6-data.json';
+const WEAPONS_URL = 'https://cdn.jsdelivr.net/gh/bertgoldstein1969-sys/bf6-data@main/weapon-trends.json';
+const LOCAL_WEAPONS_URL = 'assets/weapons.json';
+const esc = (s='') => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = (d) => d ? new Date(d).toLocaleString() : 'Unknown';
+const hoursAgo = (d) => {
+  if (!d) return 'recently';
+  const hrs = Math.max(1, Math.floor((Date.now() - new Date(d).getTime()) / 36e5));
+  return `${hrs}h ago`;
+};
+
+const order=['S','A','B','C','D','F'];
+let currentClass='all', currentSearch='', currentMode='all', weapons=[];
+const reasonMap={
+  'M8A1':'fastest practical TTK at mid-range',
+  'XM325':'low recoil beam with reliable damage',
+  'A.R.C. M1':'one-shot threat in open sightlines',
+  'Razor 9mm':'elite close-range pressure in Resurgence',
+  'Sokol 545':'stable long-range control for BR'
+};
+
+function clsNorm(v=''){ return String(v).toLowerCase().replace('marksman','sniper').replace('melee','shotgun'); }
+function trendFor(name){
+  const found = weapons.find(w=>w.name===name && w.trend);
+  if (found?.trend) return found.trend;
+  const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
+  return (seed%3===0?'up':seed%3===1?'down':'flat');
+}
+function popularityFor(name){
+  const found = weapons.find(w=>w.name===name && typeof w.popularity==='number');
+  if (typeof found?.popularity === 'number') return found.popularity;
+  const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
+  return 35 + (seed % 46);
+}
+function ttkFor(w){
+  if (typeof w.ttk === 'number') return w.ttk;
+  return Math.max(380, 760 - (w.damage*2) - (w.control));
+}
+function patchImpactFor(w){
+  if (typeof w.patchImpactScore === 'number') return w.patchImpactScore;
+  const trend = trendFor(w.name);
+  const trendPts = trend==='up' ? 14 : trend==='down' ? -14 : 0;
+  const popPts = Math.round((popularityFor(w.name)-50)*0.6);
+  const tierBase = {S:88, A:76, B:63, C:50, D:40, F:28}[String(w.tier||'F').toUpperCase()] || 35;
+  return Math.max(0, Math.min(100, tierBase + trendPts + popPts));
+}
+
+function normalizeTrendWeapons(trendDoc, localDoc){
+  const localMap = new Map((localDoc?.weapons||[]).map(w=>[w.name, w]));
+  const inWeapons = trendDoc?.weapons || [];
+  return inWeapons.map(w=>{
+    const name = w.weaponName || w.name;
+    const local = localMap.get(name) || {};
+    return {
+      id: w.id || local.id || name,
+      name,
+      class: w.class || local.class || 'AR',
+      tier: w.tier || local.tier || 'B',
+      mode: w.mode || local.mode || 'All',
+      damage: w.damage ?? local.damage ?? 80,
+      range: w.range ?? local.range ?? 75,
+      mobility: w.mobility ?? local.mobility ?? 75,
+      control: w.control ?? local.control ?? 75,
+      strengths: w.strengths || local.strengths || [],
+      weaknesses: w.weaknesses || local.weaknesses || [],
+      attachments: w.attachments || local.attachments || [],
+      popularity: w.popularity,
+      trend: w.trend,
+      deltaScore: w.deltaScore,
+      deltaPopularity: w.deltaPopularity,
+      patchImpactScore: w.patchImpactScore,
+      tierChange: w.tierChange || 0
+    };
+  });
+}
+
+function matches(w){
+  const wc=clsNorm(w.class);
+  const classOk = currentClass==='all' || wc===currentClass;
+  const searchOk = !currentSearch || w.name.toLowerCase().includes(currentSearch);
+  const mode = String(w.mode||'all').toLowerCase();
+  const modeOk = currentMode==='all' || mode.includes(currentMode);
+  return classOk && searchOk && modeOk;
+}
+
+function weaponCard(w){
+  const cls=clsNorm(w.class), trend=trendFor(w.name), pop=popularityFor(w.name), ttk=ttkFor(w), impact=patchImpactFor(w);
+  const thumb=`assets/gun-${cls}.svg`;
+  const trendGlyph=trend==='up'?'↑':trend==='down'?'↓':'→';
+  const trendClass=trend==='up'?'trend-up':trend==='down'?'trend-down':'trend-flat';
+  const reason=(w.strengths&&w.strengths[0])?w.strengths[0]:reasonMap[w.name]||'solid current-season performer';
+  return `<article class="weapon-mini" data-id="${esc(w.id)}" data-class="${cls}">
+    <img class="weapon-thumb" src="${thumb}" alt="${esc(w.class)} weapon" loading="lazy"/>
+    <h4>${esc(w.name)} <span class="wclass">${esc(w.class)}</span> <span class="trend ${trendClass}">${trendGlyph}</span></h4>
+    <p class="weapon-reason">${esc(reason)}</p>
+    <div class="weapon-stats"><span>TTK: ${ttk}ms</span><span>Recoil: ${Math.max(1,100-w.control)}%</span><span>Pop: ${pop}%</span></div>
+    <div class="impact-row"><span>Patch Impact</span><span class="impact-score ${impact>=75?'impact-high':impact>=55?'impact-mid':'impact-low'}">${impact}</span></div>
+    <div class="impact-bar"><i style="width:${impact}%"></i></div>
+    <a class="weapon-link" href="./weapons/${encodeURIComponent(w.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))}-meta-build.html">Open Build Page →</a>
+  </article>`;
+}
+
+function renderTopMeta(lastUpdated){
+  const picks=weapons.filter(w=>w.tier==='S').slice(0,5);
+  document.getElementById('top-meta').innerHTML=picks.map(w=>`<article class="top-meta-card"><h4>${esc(w.name)}</h4><p><span class="tiny-badge">${esc(w.tier)}</span> ${esc(reasonMap[w.name]||w.strengths?.[0]||'top current-season performer')}</p></article>`).join('');
+  document.getElementById('status-row').textContent=`Last Updated: ${hoursAgo(lastUpdated)} • Tracking ${weapons.length} weapons • Updated every 4 hours • Based on patch + community data`;
+  const hot=picks[0];
+  if(hot){
+    document.getElementById('meta-alert').textContent=`🚨 META ALERT: ${hot.name} is the current fastest TTK pressure pick in ${hot.mode}.`;
+  }
+  const sticky = picks.slice(0,3).map(w=>`<span class='s-item'>${esc(w.name)} <b>${esc(w.tier)}</b> <i class='trend ${trendFor(w.name)==='up'?'trend-up':trendFor(w.name)==='down'?'trend-down':'trend-flat'}'>${trendFor(w.name)==='up'?'↑':trendFor(w.name)==='down'?'↓':'→'}</i></span>`).join('');
+  document.getElementById('sticky-meta-items').innerHTML = sticky;
+}
+
+function renderTier(lastUpdated){
+  document.getElementById('tier-last-updated').textContent=`Updated ${hoursAgo(lastUpdated)}`;
+  const grouped = Object.fromEntries(order.map(t=>[t,[]]));
+  weapons.filter(matches).forEach(w=>{ const t=(w.tier||'F').toUpperCase(); if(grouped[t]) grouped[t].push(w); });
+  const rows = order.map(tier=>{
+    const list=grouped[tier].length?grouped[tier]:[{id:'none',name:'No matching items',class:'',damage:'—',range:'—',control:'—',attachments:[],strengths:[],weaknesses:[]}];
+    return `<div class="tier-row tier-${tier.toLowerCase()}"><div class="tier-badge">${tier}</div><div class="tier-weapons">${list.map(weaponCard).join('')}</div></div>`;
+  }).join('');
+  document.getElementById('tier-table').innerHTML=rows;
+  document.querySelectorAll('.weapon-mini[data-id]:not([data-id="none"])').forEach(el=>el.addEventListener('click',()=>openWeaponModal(el.dataset.id)));
+}
+
+function openWeaponModal(id){
+  const w=weapons.find(x=>String(x.id)===String(id)); if(!w) return;
+  const modal=document.getElementById('weapon-modal');
+  document.getElementById('wm-title').textContent=w.name;
+  document.getElementById('wm-meta').textContent=`${w.class} • Tier ${w.tier} • Mode: ${w.mode}`;
+  document.getElementById('wm-stats').innerHTML=`<li>Damage: ${w.damage}</li><li>Range: ${w.range}</li><li>Mobility: ${w.mobility}</li><li>Control: ${w.control}</li><li>Estimated TTK: ${ttkFor(w)}ms</li><li>Popularity: ${popularityFor(w.name)}%</li><li>Patch Impact Score: ${patchImpactFor(w)}/100</li><li>Momentum Score: ${w.momentumScore??0}</li><li>Time in Tier: ${w.timeInTier??0} day(s)</li><li>Heat: ${w.heatLevel||'stable'}</li>`;
+  document.getElementById('wm-attachments').innerHTML=(w.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>No recommended attachments listed</li>';
+  document.getElementById('wm-strengths').innerHTML=(w.strengths||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
+  document.getElementById('wm-weaknesses').innerHTML=(w.weaknesses||[]).map(a=>`<li>${esc(a)}</li>`).join('')||'<li>—</li>';
+  const rel = weapons.filter(x=>x.class===w.class && x.name!==w.name).slice(0,4);
+  document.getElementById('wm-related').innerHTML = rel.map(x=>`<li><a href="./weapons/${encodeURIComponent(x.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))}-meta-build.html">${esc(x.name)}</a></li>`).join('') || '<li>No related weapons</li>';
+  modal.classList.add('open');
+}
+
+function renderLoadout(lastUpdated){
+  const best=weapons.find(w=>w.tier==='S') || weapons[0];
+  if(!best) return;
+  document.getElementById('loadout-card').innerHTML=`<div class="loadout-card"><h3>${esc(best.name)}</h3><p class="muted">🔥 Updated ${hoursAgo(lastUpdated)} — dominating right now</p><p class="muted">${esc(best.strengths?.[0]||'Best all-around pick right now')}</p><ul>${(best.attachments||[]).map(a=>`<li>${esc(a)}</li>`).join('')}</ul><div class="loadout-cta"><button class="copy-btn" id="copy-loadout">Copy Loadout</button><a class="copy-btn secondary" href="shop.html">Build This Setup</a></div><p class="affiliate-slot">Recommended Gear for this setup:</p></div>`;
+  const shareUrl = `${location.origin}${location.pathname}?weapon=${encodeURIComponent(best.name)}&tier=${encodeURIComponent(best.tier)}`;
+  document.getElementById('share-loadout').innerHTML = `<div class="content-card"><h3>Share Loadout</h3><p class="muted">Optimized for Reddit, TikTok captions, and Discord posts.</p><div class="loadout-cta"><button class="copy-btn" id="copy-link">Copy Link</button><button class="copy-btn secondary" id="download-card">Download Image</button></div></div>`;
+  document.getElementById('affiliate-gear').innerHTML=`<div class='gear-grid'><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Best Controller for Battlefield 6</strong><span>Improves close-range strafe tracking and movement consistency</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Best Headset for Footsteps</strong><span>Clear directional audio for faster reaction in final circles</span></a><a class='gear-card' href='https://www.amazon.com/?tag=REPLACE_WITH_TAG' target='_blank' rel='sponsored noopener'><strong>Best Monitor for Competitive Play</strong><span>Higher refresh + lower latency for cleaner gunfights</span></a></div>`;
+  document.getElementById('copy-loadout').addEventListener('click',async()=>{
+    const txt=`${best.name}\n${(best.attachments||[]).join('\n')}`;
+    try{ await navigator.clipboard.writeText(txt); document.getElementById('copy-loadout').textContent='Copied'; }catch{}
+  });
+  document.getElementById('copy-link').addEventListener('click', async()=>{
+    try{ await navigator.clipboard.writeText(shareUrl); document.getElementById('copy-link').textContent='Copied Link'; }catch{}
+  });
+  document.getElementById('download-card').addEventListener('click', ()=>{
+    const c=document.createElement('canvas'); c.width=1200; c.height=630;
+    const x=c.getContext('2d');
+    x.fillStyle='#0f1520'; x.fillRect(0,0,c.width,c.height);
+    x.fillStyle='#9dff5b'; x.font='700 34px Arial'; x.fillText('WARZONE META LOADOUT', 50, 80);
+    x.fillStyle='#fff'; x.font='700 58px Arial'; x.fillText(best.name, 50, 170);
+    x.fillStyle='#cde0ff'; x.font='28px Arial'; x.fillText(`Tier ${best.tier} • ${best.mode}`, 50, 220);
+    x.fillStyle='#d8e6ff'; x.font='24px Arial';
+    (best.attachments||[]).slice(0,5).forEach((a,i)=>x.fillText(`• ${a}`, 50, 290 + i*44));
+    x.fillStyle='#95f7ba'; x.font='22px Arial'; x.fillText('bf6metahub.com', 50, 590);
+    const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download=`${best.name.replace(/\s+/g,'-').toLowerCase()}-loadout.png`; a.click();
+  });
+}
+
+function renderChanges(){
+  const byDelta=[...weapons].sort((a,b)=>(b.deltaScore||0)-(a.deltaScore||0));
+  const topRiser=byDelta[0], topDrop=byDelta[byDelta.length-1];
+  const newS=weapons.find(w=>w.tier==='S' && (w.tierChange||0)>0) || weapons.find(w=>w.tier==='S');
+  const buffed=weapons.filter(w=>trendFor(w.name)==='up').slice(0,3);
+  const nerfed=weapons.filter(w=>trendFor(w.name)==='down').slice(0,3);
+  document.getElementById('meta-changes-list').innerHTML=`
+  <article class="change-card"><h4>📈 Top Riser</h4><p>${esc(topRiser?.name||'—')} <span class='trend trend-up'>↑</span></p><small>Δ Score: ${topRiser?.deltaScore??0} • Δ Pop: ${topRiser?.deltaPopularity??0}</small></article>
+  <article class="change-card"><h4>📉 Biggest Drop</h4><p>${esc(topDrop?.name||'—')} <span class='trend trend-down'>↓</span></p><small>Δ Score: ${topDrop?.deltaScore??0} • Δ Pop: ${topDrop?.deltaPopularity??0}</small></article>
+  <article class="change-card"><h4>⭐ Newly S-Tier Watch</h4><p>${esc(newS?.name||'—')}</p><small>${esc(newS?.mode||'all modes')}</small></article>
+  <article class="change-card"><h4>Buffed / Nerfed</h4><small>Buffed: ${buffed.map(w=>esc(w.name)).join(', ')||'—'}<br/>Nerfed: ${nerfed.map(w=>esc(w.name)).join(', ')||'—'}</small></article>`;
+}
+
+function renderTrending(){
+  const top=[...weapons].sort((a,b)=>popularityFor(b.name)-popularityFor(a.name)).slice(0,6);
+  document.getElementById('trending-list').innerHTML=top.map((w)=>`<article class='trend-card'><h4>${esc(w.name)}</h4><p>${popularityFor(w.name)}% popularity <span class='trend ${trendFor(w.name)==='up'?'trend-up':trendFor(w.name)==='down'?'trend-down':'trend-flat'}'>${trendFor(w.name)==='up'?'↑':trendFor(w.name)==='down'?'↓':'→'}</span></p></article>`).join('');
+  const riser=[...weapons].sort((a,b)=>(b.deltaScore||0)-(a.deltaScore||0))[0];
+  if(riser) document.getElementById('biggest-riser').textContent=`Biggest riser today: ${riser.name} ↑ (Δ ${riser.deltaScore||0})`;
+}
+
+function wireControls(lastUpdated){
+  document.querySelectorAll('#class-filters .chip').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#class-filters .chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentClass=btn.dataset.class;renderTier(lastUpdated);}));
+  document.querySelectorAll('#mode-tabs .tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#mode-tabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentMode=btn.dataset.mode;renderTier(lastUpdated);}));
+  document.getElementById('weapon-search').addEventListener('input',(e)=>{currentSearch=e.target.value.trim().toLowerCase();renderTier(lastUpdated);});
+  document.getElementById('wm-close').addEventListener('click',()=>document.getElementById('weapon-modal').classList.remove('open'));
+  document.getElementById('weapon-modal').addEventListener('click',(e)=>{if(e.target.id==='weapon-modal') e.currentTarget.classList.remove('open');});
+  const sticky=document.getElementById('sticky-meta');
+  const scta=document.getElementById('scroll-cta');
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>220) sticky.classList.add('show'); else sticky.classList.remove('show');
+    const ratio = (window.scrollY + window.innerHeight) / (document.documentElement.scrollHeight || 1);
+    if(ratio>0.5) scta.classList.add('show'); else scta.classList.remove('show');
+  });
+  document.getElementById('scroll-copy')?.addEventListener('click', ()=> document.getElementById('copy-loadout')?.click());
+}
+
+(async()=>{
+  let lastUpdated=null;
+  let trendDoc=null;
+  let localDoc={weapons:[]};
+  try{ trendDoc=await (await fetch(WEAPONS_URL,{cache:'no-store'})).json(); }catch{}
+  try{ localDoc=await (await fetch(LOCAL_WEAPONS_URL,{cache:'no-store'})).json(); }catch{}
+
+  if(trendDoc?.weapons?.length){
+    weapons = normalizeTrendWeapons(trendDoc, localDoc);
+    lastUpdated = trendDoc.generatedAt || trendDoc.date || null;
+  }else{
+    weapons = (localDoc.weapons||[]).map(w=>({ ...w, weaponName:w.name }));
+    lastUpdated = localDoc.lastUpdated || null;
+  }
+
+  try{ const data=await (await fetch(DATA_URL,{cache:'no-store'})).json(); lastUpdated=lastUpdated||data.generatedAt; }catch{}
+  renderTopMeta(lastUpdated);
+  renderTier(lastUpdated);
+  renderLoadout(lastUpdated);
+  renderChanges();
+  renderTrending();
+  wireControls(lastUpdated);
+})();
+</script>
+<script src="../assets/app-config.js"></script>
+</body>
+</html>
