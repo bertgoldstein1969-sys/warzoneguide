@@ -21,7 +21,7 @@ body{
   background:linear-gradient(180deg,#0f1115 0%,#12151b 100%);
   line-height:1.5;
 }
-a{color:#95f7ba}
+a{color:color-mix(in srgb,var(--accent-primary) 68%, #d7e3ff)}
 nav{
   position:sticky;top:0;z-index:20;
   display:flex;justify-content:space-between;align-items:center;
@@ -33,7 +33,7 @@ nav{
 .nav-logo{font-weight:800;letter-spacing:.4px;text-transform:uppercase;display:flex;align-items:center;gap:.55rem}
 .nav-logo-img{width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(143,255,95,.45))}
 .nav-links{list-style:none;display:flex;gap:1rem;margin:0;padding:0}
-.nav-links a{text-decoration:none;color:#d4fadd;font-weight:600;opacity:.92}
+.nav-links a{text-decoration:none;color:color-mix(in srgb,var(--accent-primary) 28%, #e6ecff);font-weight:600;opacity:.92}
 .nav-links a:hover{opacity:1;color:var(--accent)}
 .hero{
   position:relative;
@@ -55,7 +55,7 @@ nav{
     linear-gradient(180deg, rgba(23,26,32,.95) 0%, rgba(15,17,21,.98) 100%);
 }
 .hero-inner{position:relative;z-index:1;padding-top:3rem;padding-bottom:2.4rem}
-.kicker{font-size:.78rem;letter-spacing:1.8px;color:#9ce5b0;font-weight:700;text-transform:uppercase}
+.kicker{font-size:.78rem;letter-spacing:1.8px;color:color-mix(in srgb,var(--accent-primary) 52%, #d7e3ff);font-weight:700;text-transform:uppercase}
 .section{max-width:1180px;margin:0 auto;padding:1rem 1.25rem 2rem}
 h1{font-size:3.05rem;line-height:1.1;margin:.6rem 0 0.85rem;font-weight:850;letter-spacing:-0.02em}
 h2{font-size:2.05rem;line-height:1.1;margin:.5rem 0 1rem;font-weight:800}
@@ -175,7 +175,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .tiny-badge{display:inline-block;background:var(--badge-color);color:#0f1510;border-radius:999px;padding:.1rem .45rem;font-size:.68rem;font-weight:800;margin-right:.35rem}
 .weapon-reason{margin:0;color:#9fb4d8;font-size:.78rem;line-height:1.25}
 .trend{font-weight:900}
-.trend-up{color:#71ff71}.trend-down{color:#ff7b7b}.trend-flat{color:#c0d0e8}
+.trend-up{color:color-mix(in srgb,var(--accent-primary) 75%, #d6f1ff)}.trend-down{color:#ff7b7b}.trend-flat{color:#c0d0e8}
 .content-card{background:#121923;border:1px solid #253142;border-radius:14px;padding:1rem;margin-top:1rem}
 .loadout-card{background:#182232;border:1px solid #2f3f58;border-radius:12px;padding:.8rem}
 .loadout-card ul{margin:.45rem 0 .6rem;padding-left:1rem}
@@ -187,7 +187,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .gear-card{display:block;background:#1a2435;border:1px solid #324966;border-radius:10px;padding:.6rem;text-decoration:none;color:#e8f1ff}
 .gear-card strong{display:block;margin-bottom:.2rem}
 .gear-card span{color:#a8bbd7;font-size:.84rem}
-.gear-card:hover{border-color:#77d878}
+.gear-card:hover{border-color:var(--accent-primary);box-shadow:0 0 12px var(--accent-glow)}
 .change-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
 .change-card{background:#182232;border:1px solid #2f3f58;border-radius:10px;padding:.6rem}
 .change-card ul{margin:0;padding-left:1rem}
@@ -203,7 +203,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .s-item b{color:var(--accent-primary);margin-left:.2rem}
 .impact-row{display:flex;justify-content:space-between;font-size:.72rem;color:#b8c8e4;margin-top:.15rem}
 .impact-score{font-weight:800}
-.impact-high{color:#7eff8f}.impact-mid{color:#ffd86a}.impact-low{color:#ff8f8f}
+.impact-high{color:color-mix(in srgb,var(--accent-primary) 72%, #d6f1ff)}.impact-mid{color:#ffd86a}.impact-low{color:#ff8f8f}
 .impact-bar{height:6px;background:#172131;border:1px solid #2b3b56;border-radius:999px;overflow:hidden}
 .impact-bar i{display:block;height:100%;background:linear-gradient(90deg,#ff5555,#ffd65a,#78ff88)}
 .weapon-link{display:inline-block;margin-top:.35rem;font-size:.75rem;color:#9dd4ff;text-decoration:none}
@@ -211,6 +211,19 @@ footer{border-top:1px solid var(--border);padding:1.2rem;text-align:center;color
 .scroll-cta{position:fixed;right:16px;bottom:18px;z-index:40;display:none}
 .scroll-cta.show{display:block}
 .scroll-cta .copy-btn{box-shadow:0 8px 24px rgba(0,0,0,.35)}
+html[data-game="bo7"] .hero::after{
+  background:
+    radial-gradient(760px 260px at 90% 0%, rgba(255,122,0,.33), transparent 62%),
+    radial-gradient(520px 220px at 10% 96%, rgba(255,60,0,.22), transparent 68%),
+    linear-gradient(180deg, rgba(25,18,18,.95) 0%, rgba(15,14,14,.98) 100%);
+}
+html[data-game="bf6"] .hero::after{
+  background:
+    radial-gradient(760px 250px at 88% 0%, rgba(59,130,246,.24), transparent 62%),
+    radial-gradient(500px 210px at 12% 95%, rgba(29,78,216,.18), transparent 68%),
+    linear-gradient(180deg, rgba(18,24,33,.95) 0%, rgba(13,18,26,.98) 100%);
+}
+
 @media (max-width: 900px){
   .change-grid{grid-template-columns:1fr}
   .sticky-meta{top:50px}

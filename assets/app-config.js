@@ -5,7 +5,9 @@
   try {
     const cfg = await (await fetch('config/games.json', {cache:'no-store'})).json();
     const game = cfg[gameKey] || cfg.warzone;
-    localStorage.setItem('meta_game', Object.keys(cfg).includes(gameKey) ? gameKey : 'warzone');
+    const resolvedKey = Object.keys(cfg).includes(gameKey) ? gameKey : 'warzone';
+    localStorage.setItem('meta_game', resolvedKey);
+    document.documentElement.setAttribute('data-game', resolvedKey);
 
     const primary = game.primary || game.themeColor || '#00ff99';
     const secondary = game.secondary || '#61f500';
